@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Secret Wish & Gift Magic Portal</title>
+    <title>✨ Secret Wish & Memory Magic</title>
     
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -19,45 +19,34 @@
         .sub-text { font-size: 18px; color: #222; line-height: 1.6; font-weight: 700; margin-bottom: 15px; text-align: center; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e0d4fc; }
         .memory-box { background: #fffde7; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; font-size: 13px; color: #555; margin-bottom: 12px; text-align: left; }
         .btn-share { display: block; width: 100%; text-align: center; background: #25d366; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
+        .btn-create-own { display: block; width: 100%; text-align: center; background: #ff9800; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(255, 152, 0, 0.3); }
         .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
         .photo-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
         .audio-box { margin-bottom: 12px; text-align: left; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px solid #c8e6c9; }
-        #authScreen { display: block; }
-        #mainApp { display: none; }
-        #limitScreen { display: none; text-align: center; }
+        
+        #viewerPassScreen { display: none; }
+        #creatorScreen { display: block; }
+        #viewerShowScreen { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- PASSWORD PROTECTION SCREEN -->
-    <div class="container" id="authScreen">
-        <h1>🔒 Secret Portal Access</h1>
-        <p class="sub">Yeh portal secure hai. Access karne ke liye password dalein:</p>
-        <input type="password" id="passInput" placeholder="Enter Secret Password...">
-        <button class="btn-main" onclick="checkPassword()">🔓 Unlock Website</button>
-        <p id="errorMsg" style="color: red; font-size: 12px; margin-top: 8px;"></p>
+    <!-- 1. VIEWER PASSWORD & NAME SCREEN -->
+    <div class="container" id="viewerPassScreen">
+        <h1>🔒 Protected Secret Wish</h1>
+        <p class="sub">Yeh wish password se locked hai. Dekhne ke liye details bharein:</p>
+        <label>🔑 Secret Password</label>
+        <input type="password" id="viewerPassInput" placeholder="Enter Password...">
+        <label>👤 Apka Naam (Recipient Name)</label>
+        <input type="text" id="viewerNameInput" placeholder="Apna naam yahan likhein...">
+        <button class="btn-main" onclick="unlockViewerWish()">🔓 Open Secret Wish</button>
+        <p id="viewerErrorMsg" style="color: red; font-size: 12px; margin-top: 8px;"></p>
     </div>
 
-    <!-- FREE LIMIT OVER SCREEN -->
-    <div class="container" id="limitScreen">
-        <h1>⚠️ Free Limit Reached</h1>
-        <p class="sub">Aapne free version ki limit (1 wish) already use kar li hai!</p>
-        <div style="background: #fff8e1; padding: 12px; border-radius: 8px; border: 1px solid #ffe0b2; font-size: 12px; margin-bottom: 15px; text-align: left;">
-            💎 <b>Unlock Lifetime & Paid Features:</b><br>
-            - Unlimited wishes<br>
-            - 10 Photos Upload<br>
-            - Voice Note Recording<br>
-            - Special Memory Story Box<br><br>
-            <b>Pay ₹20 via UPI to Creator:</b><br>
-            <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold; font-size: 14px;">⚡ Pay via UPI App</a>
-        </div>
-        <button class="btn-main" onclick="verifyPaidUser()">✅ I have Paid (Unlock Full Access)</button>
-    </div>
-
-    <!-- MAIN APP SCREEN -->
-    <div class="container" id="mainApp">
-        <h1>✨ AI Wish & Gift Studio</h1>
-        <p class="sub" id="modeTitle">Free Mode (1 Wish Limit)</p>
+    <!-- 2. CREATOR STUDIO SCREEN -->
+    <div class="container" id="creatorScreen">
+        <h1>✨ Create Secret Wish & Memory</h1>
+        <p class="sub">Photos, Voice, Message aur Password Set Karein</p>
 
         <label>🎯 Select Occasion</label>
         <select id="occasion">
@@ -67,147 +56,82 @@
             <option value="success">🏆 Success / Congrats</option>
         </select>
 
-        <label>✍️ Select or Write Shayari / Message</label>
-        <select id="shayariType" onchange="toggleCustomShayari()">
-            <option value="ai">🤖 Generate Fresh AI Shayari</option>
-            <option value="romantic">💖 Romantic & Sweet Shayari</option>
-            <option value="funny">🔥 Fun & Dosti Shayari</option>
-            <option value="custom">✏️ Write Your Own Custom Shayari</option>
-        </select>
-        <textarea id="customShayariBox" style="display:none;" placeholder="Apni custom shayari yahan likhein..."></textarea>
+        <label>✍️ Write Your Special Shayari / Message</label>
+        <textarea id="creatorMessage" rows="3" placeholder="Apni pyari wish ya shayari yahan likhein..."></textarea>
 
-        <label>👤 Recipient Name</label>
-        <input type="text" id="nameInput" placeholder="Jaise: Priya, Rahul...">
+        <label>👤 Jisko bhejna hai uska Naam (Expected Recipient)</label>
+        <input type="text" id="creatorName" placeholder="Jaise: Priya, Rahul...">
 
-        <!-- PAID ONLY FEATURES WRAPPER -->
-        <div id="paidFeatureSection" style="border: 2px dashed #764ba2; padding: 10px; border-radius: 10px; margin-bottom: 12px; background: #faf5ff; display:none;">
-            <div style="color: #764ba2; font-weight: bold; font-size: 12px; margin-bottom: 8px;">💎 Paid Exclusive Features Active</div>
-            
-            <label>📸 Upload Photos (Up to 10 Photos)</label>
-            <input type="file" id="imageInput" accept="image/*" multiple onchange="handleImageUpload()">
-            <div class="photo-preview" id="imagePreviewContainer"></div>
+        <label>📸 Upload Photos (Up to 5 Photos)</label>
+        <input type="file" id="imageInput" accept="image/*" multiple onchange="handleImageUpload()">
+        <div class="photo-preview" id="imagePreviewContainer"></div>
 
-            <label>📖 Special Memory / Secret Story</label>
-            <textarea id="memoryInput" placeholder="Apni koi khaas yaad ya purani baat yahan likhein jo card mein dikhegi..."></textarea>
+        <label>📖 Special Memory / Secret Story</label>
+        <textarea id="creatorMemory" placeholder="Koi khaas yaad ya purani baat likhein..."></textarea>
 
-            <label>🎙️ Record Voice Note (Audio Wish)</label>
-            <button type="button" id="recordBtn" class="btn-main" style="background:#e91e63; font-size:14px; padding:8px; margin-bottom:8px;" onclick="toggleRecording()">🔴 Start Voice Recording</button>
-            <audio id="audioPlayback" controls style="width:100%; display:none;"></audio>
-        </div>
+        <label>🎙️ Record Voice Note (Audio Wish)</label>
+        <button type="button" id="recordBtn" class="btn-main" style="background:#e91e63; font-size:14px; padding:8px; margin-bottom:8px;" onclick="toggleRecording()">🔴 Start Voice Recording</button>
+        <audio id="audioPlayback" controls style="width:100%; display:none; margin-bottom:12px;"></audio>
 
-        <div id="freePhotoSection">
-            <label>📸 Upload Photos (Free: Max 2)</label>
-            <input type="file" id="freeImageInput" accept="image/*" multiple onchange="handleFreeImageUpload()">
-            <div class="photo-preview" id="freeImagePreviewContainer"></div>
-        </div>
+        <label>🔑 Set a Secret Password</label>
+        <input type="text" id="creatorPassword" placeholder="Jaise: 1234, loveyou...">
 
-        <div style="background: #fff8e1; padding: 10px; border-radius: 6px; font-size: 11px; margin-bottom: 12px; text-align: left; border: 1px solid #ffe0b2;" id="upgradeBanner">
-            💎 <b>Want Voice Note & 10 Photos?</b><br>
-            Creator ko UPI pe ₹20 dekar unlock karein. <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('wish_paid', 'true')">Pay via UPI</a>
-        </div>
+        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Secret Link & Card</button>
 
-        <button class="btn-main" onclick="generatePortalCard()">✨ Create & Preview Card</button>
-
-        <div class="wish-card" id="wishCard">
-            <div id="cardImages" class="photo-preview"></div>
-            <div class="sub-text" id="wishText"></div>
-            <div id="cardMemory" class="memory-box" style="display:none;"></div>
-            <div id="cardAudioContainer" class="audio-box" style="display:none;">
-                <div style="font-size:12px; font-weight:bold; color:#2e7d32; margin-bottom:4px;">🎙️ Voice Note from Sender:</div>
-                <audio id="cardAudio" controls style="width:100%;"></audio>
+        <div class="wish-card" id="creatorWishCard">
+            <div id="creatorCardImages" class="photo-preview"></div>
+            <div class="sub-text" id="creatorCardText"></div>
+            <div id="creatorCardMemory" class="memory-box" style="display:none;"></div>
+            <div id="creatorCardAudioContainer" class="audio-box" style="display:none;">
+                <div style="font-size:12px; font-weight:bold; color:#2e7d32; margin-bottom:4px;">🎙️ Voice Note:</div>
+                <audio id="creatorCardAudio" controls style="width:100%;"></audio>
             </div>
-            <button class="btn-share" onclick="shareEverywhere()">🚀 Share Wish & Memories Everywhere</button>
+            
+            <div style="background: #e8f4fd; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; font-size: 11px; text-align: left;">
+                🔗 <b>Copy & Share Link:</b><br>
+                <span id="generatedShareLink" style="color: #0d6efd;"></span>
+            </div>
+            <button class="btn-share" style="margin-top: 10px;" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
         </div>
     </div>
 
+    <!-- 3. VIEWER SHOW SCREEN -->
+    <div class="container" id="viewerShowScreen">
+        <h1 id="viewerHeading">✨ Special Wish For You ✨</h1>
+        <div id="viewerCardImages" class="photo-preview"></div>
+        <div class="sub-text" id="viewerCardText"></div>
+        <div id="viewerCardMemory" class="memory-box" style="display:none;"></div>
+        <div id="viewerCardAudioContainer" class="audio-box" style="display:none;">
+            <div style="font-size:12px; font-weight:bold; color:#2e7d32; margin-bottom:4px;">🎙️ Voice Note from Sender:</div>
+            <audio id="viewerCardAudio" controls style="width:100%;"></audio>
+        </div>
+
+        <button class="btn-create-own" onclick="resetToCreatorMode()">✨ Create Your Own Wish</button>
+    </div>
+
     <script>
-        const CORRECT_PASSWORD = "alok123";
+        let uploadedImages = [];
+        let recordedAudioBase64 = "";
         let mediaRecorder;
         let audioChunks = [];
-        let recordedAudioUrl = "";
-        let uploadedImages = [];
 
         window.onload = function() {
-            // Check if user already used free wish
-            const isPaid = localStorage.getItem('wish_paid') === 'true';
-            const hasUsedFree = localStorage.getItem('wish_used_free') === 'true';
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
 
-            if (isPaid) {
-                activatePaidMode();
-            } else if (hasUsedFree) {
-                // Hide auth and show limit screen if trying to re-access without paying
+            if (encodedData) {
+                document.getElementById('creatorScreen').style.display = 'none';
+                document.getElementById('viewerPassScreen').style.display = 'block';
             }
         };
 
-        function checkPassword() {
-            const enteredPass = document.getElementById('passInput').value;
-            if (enteredPass === CORRECT_PASSWORD) {
-                document.getElementById('authScreen').style.display = 'none';
-                
-                const isPaid = localStorage.getItem('wish_paid') === 'true';
-                const hasUsedFree = localStorage.getItem('wish_used_free') === 'true';
-
-                if (!isPaid && hasUsedFree) {
-                    document.getElementById('limitScreen').style.display = 'block';
-                } else {
-                    document.getElementById('mainApp').style.display = 'block';
-                    if (isPaid) activatePaidMode();
-                }
-            } else {
-                document.getElementById('errorMsg').innerText = "❌ Galat password! Dobara koshish karein.";
-            }
-        }
-
-        function verifyPaidUser() {
-            localStorage.setItem('wish_paid', 'true');
-            document.getElementById('limitScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            activatePaidMode();
-        }
-
-        function activatePaidMode() {
-            document.getElementById('modeTitle').innerText = "💎 Paid Pro Studio (Unlimited, 10 Photos & Voice Note)";
-            document.getElementById('paidFeatureSection').style.display = 'block';
-            document.getElementById('freePhotoSection').style.display = 'none';
-            document.getElementById('upgradeBanner').style.display = 'none';
-        }
-
-        function toggleCustomShayari() {
-            const val = document.getElementById('shayariType').value;
-            document.getElementById('customShayariBox').style.display = (val === 'custom') ? 'block' : 'none';
-        }
-
-        // Free Image Upload (Max 2)
-        function handleFreeImageUpload() {
-            const input = document.getElementById('freeImageInput');
-            const container = document.getElementById('freeImagePreviewContainer');
-            container.innerHTML = "";
-            uploadedImages = [];
-
-            if (input.files.length > 2) {
-                alert("⚠️ Free version mein sirf 2 photos allowed hain! Jyada ke liye paid mode use karein.");
-            }
-            const limit = Math.min(input.files.length, 2);
-            for (let i = 0; i < limit; i++) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedImages.push(e.target.result);
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    container.appendChild(img);
-                }
-                reader.readAsDataURL(input.files[i]);
-            }
-        }
-
-        // Paid Image Upload (Max 10)
         function handleImageUpload() {
             const input = document.getElementById('imageInput');
             const container = document.getElementById('imagePreviewContainer');
             container.innerHTML = "";
             uploadedImages = [];
 
-            const limit = Math.min(input.files.length, 10);
+            const limit = Math.min(input.files.length, 5);
             for (let i = 0; i < limit; i++) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -220,7 +144,6 @@
             }
         }
 
-        // Voice Recording Logic
         let isRecording = false;
         async function toggleRecording() {
             const btn = document.getElementById('recordBtn');
@@ -232,23 +155,24 @@
                     mediaRecorder = new MediaRecorder(stream);
                     audioChunks = [];
 
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
-
+                    mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
                     mediaRecorder.onstop = () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                        recordedAudioUrl = URL.createObjectURL(audioBlob);
-                        audioPlayback.src = recordedAudioUrl;
-                        audioPlayback.style.display = 'block';
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = function() {
+                            recordedAudioBase64 = reader.result;
+                            audioPlayback.src = recordedAudioBase64;
+                            audioPlayback.style.display = 'block';
+                        }
                     };
 
                     mediaRecorder.start();
                     isRecording = true;
-                    btn.innerText = "⏹️ Stop & Save Voice Note";
+                    btn.innerText = "⏹️ Stop Recording";
                     btn.style.background = "#c62828";
                 } catch (err) {
-                    alert("Microphone access denied or not supported.");
+                    alert("Microphone permission denied.");
                 }
             } else {
                 mediaRecorder.stop();
@@ -258,84 +182,102 @@
             }
         }
 
-        function generatePortalCard() {
-            const name = document.getElementById('nameInput').value.trim() || 'Dost';
-            const occasion = document.getElementById('occasion').value;
-            const shayariMode = document.getElementById('shayariType').value;
-            const isPaid = localStorage.getItem('wish_paid') === 'true';
+        function generateSecretLink() {
+            const message = document.getElementById('creatorMessage').value.trim() || "Happy Wishes!";
+            const name = document.getElementById('creatorName').value.trim() || "Dost";
+            const memory = document.getElementById('creatorMemory').value.trim();
+            const password = document.getElementById('creatorPassword').value.trim() || "1234";
 
-            // Mark free user as used
-            if (!isPaid) {
-                localStorage.setItem('wish_used_free', 'true');
-            }
-            
-            let finalWish = "";
-            if (shayariMode === 'custom') {
-                finalWish = document.getElementById('customShayariBox').value || `Happy ${occasion}, ${name}!`;
-            } else if (shayariMode === 'romantic') {
-                finalWish = `✨ ${name}, tere aane se zindagi khubsurat ho gayi hai. Har pal bas teri khushi ki dua karte hain! ❤️`;
-            } else if (shayariMode === 'funny') {
-                finalWish = `🔥 Oye ${name}, party kab de raha hai bhai? Tu hi hai apna sabse bada superstar! 😎`;
-            } else {
-                const aiPools = [
-                    `🌟 ${name}, khuda se kya maange tere vaste, zindagi ki har khushi tere raaste! Happy ${occasion}! ✨`,
-                    `🚀 Sitaron se aage jahan aur bhi hain, ${name} ke liye nayi kamyabiyan aur bhi hain! Congratulations! 💫`,
-                    `🎉 Din mahina aur saal, har lamha tera bemisaal rahe ${name}! Wishing you a wonderful ${occasion}! 🥂`
-                ];
-                finalWish = aiPools[Math.floor(Math.random() * aiPools.length)];
-            }
+            const payload = {
+                m: message,
+                n: name,
+                img: uploadedImages,
+                mem: memory,
+                aud: recordedAudioBase64,
+                p: password
+            };
 
-            document.getElementById('wishText').innerText = finalWish;
+            const jsonString = JSON.stringify(payload);
+            const encoded = btoa(encodeURIComponent(jsonString));
+            const baseUrl = window.location.href.split('?')[0];
+            const finalLink = `${baseUrl}?data=${encoded}`;
 
-            // Images
-            const cardImgContainer = document.getElementById('cardImages');
-            cardImgContainer.innerHTML = "";
+            document.getElementById('generatedShareLink').innerText = finalLink;
+            window.shareableMsgText = `🔐 Ek Secret Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalLink}`;
+
+            document.getElementById('creatorCardText').innerText = `${message}`;
+            const imgContainer = document.getElementById('creatorCardImages');
+            imgContainer.innerHTML = "";
             uploadedImages.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
-                cardImgContainer.appendChild(img);
+                imgContainer.appendChild(img);
             });
 
-            // Memory Box (Paid only)
-            if (isPaid) {
-                const memoryText = document.getElementById('memoryInput').value.trim();
-                const memoryBox = document.getElementById('cardMemory');
-                if (memoryText) {
-                    memoryBox.innerHTML = `📖 <b>Special Memory / Story:</b><br>${memoryText}`;
-                    memoryBox.style.display = 'block';
-                } else {
-                    memoryBox.style.display = 'none';
-                }
-
-                // Audio
-                const audioContainer = document.getElementById('cardAudioContainer');
-                const cardAudio = document.getElementById('cardAudio');
-                if (recordedAudioUrl) {
-                    cardAudio.src = recordedAudioUrl;
-                    audioContainer.style.display = 'block';
-                } else {
-                    audioContainer.style.display = 'none';
-                }
+            if (memory) {
+                document.getElementById('creatorCardMemory').innerHTML = `📖 <b>Memory:</b><br>${memory}`;
+                document.getElementById('creatorCardMemory').style.display = 'block';
+            }
+            if (recordedAudioBase64) {
+                document.getElementById('creatorCardAudio').src = recordedAudioBase64;
+                document.getElementById('creatorCardAudioContainer').style.display = 'block';
             }
 
-            const card = document.getElementById('wishCard');
-            card.style.display = 'block';
-            card.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('creatorWishCard').style.display = 'block';
+            document.getElementById('creatorWishCard').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function shareEverywhere() {
-            const wish = document.getElementById('wishText').innerText;
-            const shareText = `${wish}\n\n✨ Created via Secret Wish & Memory Portal`;
+        function shareOnWhatsApp() {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(window.shareableMsgText)}`, '_blank');
+        }
 
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Special Wish Card',
-                    text: shareText,
-                    url: window.location.href
-                }).catch((error) => console.log('Sharing failed', error));
-            } else {
-                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+        function unlockViewerWish() {
+            const enteredPass = document.getElementById('viewerPassInput').value.trim();
+            const enteredName = document.getElementById('viewerNameInput').value.trim();
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
+
+            try {
+                const jsonString = decodeURIComponent(atob(encodedData));
+                const data = JSON.parse(jsonString);
+
+                if (enteredPass === data.p) {
+                    document.getElementById('viewerPassScreen').style.display = 'none';
+                    document.getElementById('viewerShowScreen').style.display = 'block';
+
+                    const displayName = enteredName ? enteredName : data.n;
+                    document.getElementById('viewerHeading').innerText = `✨ Special Wish For ${displayName} ✨`;
+                    document.getElementById('viewerCardText').innerText = `${data.m}`;
+                    
+                    const imgContainer = document.getElementById('viewerCardImages');
+                    imgContainer.innerHTML = "";
+                    if (data.img) {
+                        data.img.forEach(src => {
+                            const img = document.createElement('img');
+                            img.src = src;
+                            imgContainer.appendChild(img);
+                        });
+                    }
+
+                    if (data.mem) {
+                        document.getElementById('viewerCardMemory').innerHTML = `📖 <b>Memory & Story:</b><br>${data.mem}`;
+                        document.getElementById('viewerCardMemory').style.display = 'block';
+                    }
+
+                    if (data.aud) {
+                        document.getElementById('viewerCardAudio').src = data.aud;
+                        document.getElementById('viewerCardAudioContainer').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('viewerErrorMsg').innerText = "❌ Galat password! Sahi password dalein.";
+                }
+            } catch (e) {
+                document.getElementById('viewerErrorMsg').innerText = "❌ Invalid link data.";
             }
+        }
+
+        function resetToCreatorMode() {
+            window.location.href = window.location.href.split('?')[0];
         }
     </script>
 </body>

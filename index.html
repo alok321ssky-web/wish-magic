@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Ultimate Secret Wish & Slideshow Portal</title>
+    <title>✨ Ultimate Secret Wish & Animation Studio</title>
     
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -18,13 +18,29 @@
         .wish-card { margin-top: 20px; padding: 18px; border-radius: 12px; background: #f3f0ff; border: 2px dashed #764ba2; display: none; text-align: left; }
         .sub-text { font-size: 18px; color: #222; line-height: 1.6; font-weight: 700; margin-bottom: 15px; text-align: center; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e0d4fc; }
         .memory-box { background: #fffde7; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; font-size: 13px; color: #555; margin-bottom: 12px; text-align: left; }
-        .btn-share { display: block; width: 100%; text-align: center; background: #25d366; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
+        .btn-share { display: block; width: 100%; text-align: center; background: #0088cc; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
         .btn-create-own { display: block; width: 100%; text-align: center; background: #ff9800; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(255, 152, 0, 0.3); }
         
-        /* Slideshow Animation Styles */
-        .slideshow-container { position: relative; width: 100%; height: 220px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
-        .slide-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out, transform 1s ease-in-out; transform: scale(1.05); }
-        .slide-img.active { opacity: 1; transform: scale(1); }
+        /* Display Modes: Slideshow & Collage Grid */
+        .media-display-box { position: relative; width: 100%; min-height: 220px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
+        
+        /* Animations */
+        .anim-fade { opacity: 0; transition: opacity 1s ease-in-out; }
+        .anim-fade.active { opacity: 1; }
+        
+        .anim-zoom { transform: scale(0.8); opacity: 0; transition: all 1s ease-in-out; }
+        .anim-zoom.active { transform: scale(1); opacity: 1; }
+
+        .anim-bounce { transform: translateY(-30px); opacity: 0; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .anim-bounce.active { transform: translateY(0); opacity: 1; }
+
+        .collage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; padding: 6px; }
+        .collage-grid img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; }
+
+        .frame-polaroid { border: 6px solid #fff; border-bottom: 20px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .frame-neon { border: 3px solid #ff007f; box-shadow: 0 0 10px #ff007f; }
+        .frame-heart { border: 4px solid #ff4d4d; border-radius: 12px; }
+        .frame-classic { border: 2px solid #764ba2; border-radius: 6px; }
 
         .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
         .photo-preview img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
@@ -53,8 +69,8 @@
 
     <!-- 2. CREATOR STUDIO SCREEN -->
     <div class="container" id="creatorScreen">
-        <h1>✨ Ultimate Wish & Slideshow Studio</h1>
-        <p class="sub">Occasion, Shayari, Voice Note & Slideshow Photo Studio</p>
+        <h1>✨ Ultimate Wish & Animation Studio</h1>
+        <p class="sub">Occasion, Framing, Collage/Slideshow & Animation Options</p>
 
         <label>🎯 Select Occasion (Mauka)</label>
         <select id="occasion" onchange="updateDefaultShayari()">
@@ -72,7 +88,23 @@
         <label>👤 Jisko bhejna hai uska Naam</label>
         <input type="text" id="creatorName" placeholder="Jaise: Priya, Rahul, Ma...">
 
-        <label>📸 Upload Photos (Free: Max 5 | VIP Pro: Up to 20 Photos)</label>
+        <label>🖼️ Select Photo Frame / Style</label>
+        <select id="photoFrameStyle">
+            <option value="frame-classic">🖼️ Classic Purple Frame</option>
+            <option value="frame-polaroid">📷 Polaroid Style Frame</option>
+            <option value="frame-neon">✨ Neon Glow Frame</option>
+            <option value="frame-heart">💖 Heart Love Frame</option>
+        </select>
+
+        <label>🎬 Select Display Layout & Animation Style</label>
+        <select id="displayMode">
+            <option value="slideshow-fade">🎞️ Slideshow (Smooth Fade Animation)</option>
+            <option value="slideshow-zoom">🔍 Slideshow (Zoom In Animation)</option>
+            <option value="slideshow-bounce">🎉 Slideshow (Bounce Animation)</option>
+            <option value="collage">🖼️ Collage Grid View (All Photos Together)</option>
+        </select>
+
+        <label>📸 Upload Photos (Free: Max 5 | VIP Pro: Up to 20)</label>
         <input type="file" id="imageInput" accept="image/*" multiple onchange="handleImageUpload()">
         <div class="photo-preview" id="imagePreviewContainer"></div>
 
@@ -86,17 +118,27 @@
         <label>🔑 Set a Secret Password</label>
         <input type="text" id="creatorPassword" placeholder="Jaise: 1234, loveyou...">
 
+        <!-- SHOPPING APPS LIST -->
+        <div style="background: #fff0f3; padding: 12px; border-radius: 8px; border: 1px solid #ffb6c1; margin-bottom: 12px; text-align: left;">
+            🎁 <b>Surprise Gift Shopping Store:</b><br>
+            <div class="store-grid">
+                <a href="https://www.amazon.in" target="_blank" class="store-btn" style="background: #ff9900;">🛍️ Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank" class="store-btn" style="background: #2874f0;">🛒 Flipkart</a>
+                <a href="https://www.myntra.com" target="_blank" class="store-btn" style="background: #ff3f6c;">👗 Myntra</a>
+                <a href="https://www.meesho.com" target="_blank" class="store-btn" style="background: #f43397;">🛍️ Meesho</a>
+            </div>
+        </div>
+
         <!-- SUPPORT CREATOR BOX -->
         <div style="background: #fff8e1; padding: 12px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; text-align: left; border: 1px solid #ffe0b2;">
-            ☕ <b>Support Creator & Unlock VIP Pro Mode (20 Photos + Slideshow):</b><br>
+            ☕ <b>Support Creator & Unlock VIP Pro Mode (20 Photos):</b><br>
             Support karein: <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('vip_pro', 'true')">Pay ₹20 via UPI</a>
         </div>
 
         <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Secret Link</button>
 
         <div class="wish-card" id="creatorWishCard">
-            <!-- Slideshow Preview -->
-            <div class="slideshow-container" id="creatorSlideshow"></div>
+            <div class="media-display-box" id="creatorMediaBox"></div>
             <div class="sub-text" id="creatorCardText"></div>
             <div id="creatorCardMemory" class="memory-box" style="display:none;"></div>
             <div id="creatorCardAudioContainer" class="audio-box" style="display:none;">
@@ -105,18 +147,17 @@
             </div>
             
             <div style="background: #e8f4fd; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; font-size: 11px; text-align: left;">
-                🔗 <b>Copy & Share Link:</b><br>
+                🔗 <b>Copy & Share Short Link:</b><br>
                 <span id="generatedShareLink" style="color: #0d6efd;"></span>
             </div>
-            <button class="btn-share" style="margin-top: 10px;" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
+            <button class="btn-share" style="margin-top: 10px;" onclick="shareAnywhere()">🚀 Share Everywhere (All Apps)</button>
         </div>
     </div>
 
     <!-- 3. VIEWER SHOW SCREEN -->
     <div class="container" id="viewerShowScreen">
         <h1 id="viewerHeading">✨ Special Wish For You ✨</h1>
-        <!-- Animated Slideshow Viewer -->
-        <div class="slideshow-container" id="viewerSlideshow"></div>
+        <div class="media-display-box" id="viewerMediaBox"></div>
         <div class="sub-text" id="viewerCardText"></div>
         <div id="viewerCardMemory" class="memory-box" style="display:none;"></div>
         <div id="viewerCardAudioContainer" class="audio-box" style="display:none;">
@@ -124,7 +165,6 @@
             <audio id="viewerCardAudio" controls style="width:100%;"></audio>
         </div>
 
-        <!-- SHOPPING APPS & GIFT RECOMMENDATIONS -->
         <div style="background: #fff0f3; padding: 12px; border-radius: 8px; border: 1px solid #ffb6c1; margin-top: 15px; text-align: left;">
             🎁 <b>Surprise Gift Shopping Store:</b><br>
             <div class="store-grid">
@@ -143,7 +183,7 @@
         let recordedAudioBase64 = "";
         let mediaRecorder;
         let audioChunks = [];
-        let slideshowInterval = null;
+        let displayInterval = null;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -236,28 +276,50 @@
             }
         }
 
-        function startSlideshow(containerId, images) {
+        function renderMediaBox(containerId, images, mode, frameStyle) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
             if (!images || images.length === 0) return;
 
-            images.forEach((src, index) => {
-                const img = document.createElement('img');
-                img.src = src;
-                img.className = 'slide-img' + (index === 0 ? ' active' : '');
-                container.appendChild(img);
-            });
+            if (displayInterval) clearInterval(displayInterval);
 
-            if (images.length > 1) {
-                if (slideshowInterval) clearInterval(slideshowInterval);
-                let currentIndex = 0;
-                slideshowInterval = setInterval(() => {
-                    const slides = container.getElementsByClassName('slide-img');
-                    if (slides.length === 0) return;
-                    slides[currentIndex].classList.remove('active');
-                    currentIndex = (currentIndex + 1) % slides.length;
-                    slides[currentIndex].classList.add('active');
-                }, 2500); // 2.5 seconds per slide animation
+            if (mode === 'collage') {
+                const grid = document.createElement('div');
+                grid.className = 'collage-grid';
+                images.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.className = frameStyle;
+                    grid.appendChild(img);
+                });
+                container.appendChild(grid);
+            } else {
+                // Slideshow with selected animation
+                let animClass = 'anim-fade';
+                if (mode === 'slideshow-zoom') animClass = 'anim-zoom';
+                if (mode === 'slideshow-bounce') animClass = 'anim-bounce';
+
+                images.forEach((src, index) => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.style.position = 'absolute';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.className = `slide-img ${frameStyle} ${animClass}` + (index === 0 ? ' active' : '');
+                    container.appendChild(img);
+                });
+
+                if (images.length > 1) {
+                    let currentIndex = 0;
+                    displayInterval = setInterval(() => {
+                        const slides = container.getElementsByClassName('slide-img');
+                        if (slides.length === 0) return;
+                        slides[currentIndex].classList.remove('active');
+                        currentIndex = (currentIndex + 1) % slides.length;
+                        slides[currentIndex].classList.add('active');
+                    }, 2500);
+                }
             }
         }
 
@@ -266,14 +328,19 @@
             const name = document.getElementById('creatorName').value.trim() || "Dost";
             const memory = document.getElementById('creatorMemory').value.trim();
             const password = document.getElementById('creatorPassword').value.trim() || "1234";
+            const frameStyle = document.getElementById('photoFrameStyle').value;
+            const displayMode = document.getElementById('displayMode').value;
 
+            // Compact payload to keep URL shorter
             const payload = {
                 m: message,
                 n: name,
                 img: uploadedImages,
                 mem: memory,
                 aud: recordedAudioBase64,
-                p: password
+                p: password,
+                f: frameStyle,
+                dm: displayMode
             };
 
             const jsonString = JSON.stringify(payload);
@@ -283,9 +350,10 @@
 
             document.getElementById('generatedShareLink').innerText = finalLink;
             window.shareableMsgText = `🔐 Ek Secret Protected Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalLink}`;
+            window.shareableUrl = finalLink;
 
             document.getElementById('creatorCardText').innerText = `${message}`;
-            startSlideshow('creatorSlideshow', uploadedImages);
+            renderMediaBox('creatorMediaBox', uploadedImages, displayMode, frameStyle);
 
             if (memory) {
                 document.getElementById('creatorCardMemory').innerHTML = `📖 <b>Memory:</b><br>${memory}`;
@@ -300,8 +368,17 @@
             document.getElementById('creatorWishCard').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function shareOnWhatsApp() {
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(window.shareableMsgText)}`, '_blank');
+        function shareAnywhere() {
+            const shareText = window.shareableMsgText;
+            if (navigator.share) {
+                navigator.share({
+                    title: '✨ Special Secret Wish',
+                    text: shareText,
+                    url: window.shareableUrl
+                }).catch((error) => console.log('Sharing failed', error));
+            } else {
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+            }
         }
 
         function unlockViewerWish() {
@@ -322,7 +399,9 @@
                     document.getElementById('viewerHeading').innerText = `✨ Special Wish For ${displayName} ✨`;
                     document.getElementById('viewerCardText').innerText = `${data.m}`;
                     
-                    startSlideshow('viewerSlideshow', data.img);
+                    const frameStyle = data.f || 'frame-classic';
+                    const displayMode = data.dm || 'slideshow-fade';
+                    renderMediaBox('viewerMediaBox', data.img, displayMode, frameStyle);
 
                     if (data.mem) {
                         document.getElementById('viewerCardMemory').innerHTML = `📖 <b>Memory & Story:</b><br>${data.mem}`;
@@ -342,7 +421,7 @@
         }
 
         function resetToCreatorMode() {
-            if (slideshowInterval) clearInterval(slideshowInterval);
+            if (displayInterval) clearInterval(displayInterval);
             window.location.href = window.location.href.split('?')[0];
         }
     </script>

@@ -210,7 +210,7 @@
             uploadedImages = [];
 
             const isVip = localStorage.getItem('vip_pro') === 'true';
-            const maxLimit = isVip ? 20 : 5; // Free max 5, VIP Pro max 20
+            const maxLimit = isVip ? 20 : 5;
 
             if (input.files.length > maxLimit) {
                 alert(`⚠️ Free version mein sirf ${maxLimit} photos allowed hain! VIP Pro unlock karne ke liye support use karein.`);
@@ -343,9 +343,8 @@
             const baseUrl = window.location.href.split('?')[0];
             const longLink = `${baseUrl}?data=${encoded}`;
 
-            document.getElementById('generatedShareLink মেয়').innerText = "Shortening link automatically...";
+            document.getElementById('generatedShareLink').innerText = "Shortening link automatically...";
             
-            // Auto-shorten link using TinyURL free API
             try {
                 const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longLink)}`);
                 const shortUrl = await response.text();
@@ -401,35 +400,4 @@
                     document.getElementById('viewerPassScreen').style.display = 'none';
                     document.getElementById('viewerShowScreen').style.display = 'block';
 
-                    const displayName = enteredName ? enteredName : data.n;
-                    document.getElementById('viewerHeading').innerText = `✨ Special Wish For ${displayName} ✨`;
-                    document.getElementById('viewerCardText').innerText = `${data.m}`;
-                    
-                    const frameStyle = data.f || 'frame-classic';
-                    const displayMode = data.dm || 'slideshow-fade';
-                    renderMediaBox('viewerMediaBox', data.img, displayMode, frameStyle);
-
-                    if (data.mem) {
-                        document.getElementById('viewerCardMemory').innerHTML = `📖 <b>Memory & Story:</b><br>${data.mem}`;
-                        document.getElementById('viewerCardMemory').style.display = 'block';
-                    }
-
-                    if (data.aud) {
-                        document.getElementById('viewerCardAudio').src = data.aud;
-                        document.getElementById('viewerCardAudioContainer').style.display = 'block';
-                    }
-                } else {
-                    document.getElementById('viewerErrorMsg').innerText = "❌ Galat password! Sahi password dalein.";
-                }
-            } catch (e) {
-                document.getElementById('viewerErrorMsg').innerText = "❌ Invalid link data.";
-            }
-        }
-
-        function resetToCreatorMode() {
-            if (displayInterval) clearInterval(displayInterval);
-            window.location.href = window.location.href.split('?')[0];
-        }
-    </script>
-</body>
-</html>
+                    const displayName =

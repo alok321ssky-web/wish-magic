@@ -3,162 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Special Wishes & Gift Finder 🎁</title>
+    <title>✨ Secret Wish & Gift Magic Portal</title>
     
-    <!-- Open Graph Meta Tags for Social Sharing Previews -->
-    <meta property="og:title" content="✨ Special Wish & Surprise Gift for You!" />
-    <meta property="og:description" content="Apno ke liye aisi pyari wish aur surprise gift yahan dekhein. Click to view your special card!" />
-    <meta property="og:url" content="https://alok321ssky-web.github.io/wish-magic/" />
-    <meta property="og:type" content="website" />
-
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { margin: 0; padding: 15px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-        .container { background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-align: center; margin-top: 20px; margin-bottom: 20px; }
-        h1 { color: #d63384; font-size: 24px; margin-bottom: 4px; }
-        .sub { color: #666; font-size: 13px; margin-bottom: 16px; }
+        body { margin: 0; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
+        h1 { color: #764ba2; font-size: 22px; margin-bottom: 4px; }
+        .sub { color: #666; font-size: 12px; margin-bottom: 16px; }
         label { display: block; text-align: left; font-size: 13px; font-weight: bold; color: #444; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ffb6c1; font-size: 14px; outline: none; background: #fff5f8; }
-        .btn-main { width: 100%; background: #d63384; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3); transition: 0.2s; }
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; outline: none; background: #f9f9f9; }
+        .btn-main { width: 100%; background: #764ba2; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3); }
         .btn-main:active { transform: scale(0.98); }
-        .wish-card { margin-top: 20px; padding: 15px; border-radius: 12px; background: #fff0f3; border: 2px dashed #ffb6c1; display: none; text-align: left; }
-        .sub-text { font-size: 15px; color: #333; line-height: 1.5; font-weight: 500; margin-bottom: 15px; }
-        .btn-wa { display: block; text-align: center; background: #25d366; color: white; padding: 10px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; box-shadow: 0 3px 8px rgba(37, 211, 102, 0.3); }
-        .btn-share { display: block; width: 100%; text-align: center; background: #0088cc; color: white; padding: 10px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; margin-bottom: 10px; box-shadow: 0 3px 8px rgba(0, 136, 204, 0.3); font-size: 14px; }
-        .gift-box { margin-top: 15px; padding: 12px; border-radius: 10px; background: #fff8fb; border: 1px solid #ffb6c1; text-align: center; }
-        .store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
-        .store-btn { display: block; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; color: white; text-decoration: none; }
-        .tip-box { margin-top: 15px; padding: 10px; border-radius: 8px; background: #f8f9fa; border: 1px solid #dee2e6; font-size: 12px; text-align: center; color: #555; }
-        .btn-upi { display: inline-block; margin-top: 6px; background: #6f42c1; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .wish-card { margin-top: 20px; padding: 18px; border-radius: 12px; background: #f3f0ff; border: 2px dashed #764ba2; display: none; text-align: left; }
+        .sub-text { font-size: 18px; color: #222; line-height: 1.6; font-weight: 700; margin-bottom: 15px; text-align: center; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e0d4fc; }
+        .memory-box { background: #fffde7; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; font-size: 13px; color: #555; margin-bottom: 12px; text-align: left; }
+        .btn-share { display: block; width: 100%; text-align: center; background: #25d366; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
+        .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
+        .photo-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
+        .audio-box { margin-bottom: 12px; text-align: left; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px solid #c8e6c9; }
+        #authScreen { display: block; }
+        #mainApp { display: none; }
+        #limitScreen { display: none; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>✨ All Wishes Magic</h1>
-        <p class="sub">🎂 Birthday, Anniversary aur Tyohar ki pyari wishes & gifts!</p>
+    <!-- PASSWORD PROTECTION SCREEN -->
+    <div class="container" id="authScreen">
+        <h1>🔒 Secret Portal Access</h1>
+        <p class="sub">Yeh portal secure hai. Access karne ke liye password dalein:</p>
+        <input type="password" id="passInput" placeholder="Enter Secret Password...">
+        <button class="btn-main" onclick="checkPassword()">🔓 Unlock Website</button>
+        <p id="errorMsg" style="color: red; font-size: 12px; margin-top: 8px;"></p>
+    </div>
 
-        <label>🎯 Select Occasion (Mauka Chunein)</label>
+    <!-- FREE LIMIT OVER SCREEN -->
+    <div class="container" id="limitScreen">
+        <h1>⚠️ Free Limit Reached</h1>
+        <p class="sub">Aapne free version ki limit (1 wish) already use kar li hai!</p>
+        <div style="background: #fff8e1; padding: 12px; border-radius: 8px; border: 1px solid #ffe0b2; font-size: 12px; margin-bottom: 15px; text-align: left;">
+            💎 <b>Unlock Lifetime & Paid Features:</b><br>
+            - Unlimited wishes<br>
+            - 10 Photos Upload<br>
+            - Voice Note Recording<br>
+            - Special Memory Story Box<br><br>
+            <b>Pay ₹20 via UPI to Creator:</b><br>
+            <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold; font-size: 14px;">⚡ Pay via UPI App</a>
+        </div>
+        <button class="btn-main" onclick="verifyPaidUser()">✅ I have Paid (Unlock Full Access)</button>
+    </div>
+
+    <!-- MAIN APP SCREEN -->
+    <div class="container" id="mainApp">
+        <h1>✨ AI Wish & Gift Studio</h1>
+        <p class="sub" id="modeTitle">Free Mode (1 Wish Limit)</p>
+
+        <label>🎯 Select Occasion</label>
         <select id="occasion">
-            <option value="birthday">🎂 Birthday Special</option>
-            <option value="anniversary">💍 Marriage Anniversary</option>
-            <option value="festival">🎉 Festival / Tyohar (Diwali, Holi, Eid, Rakhi)</option>
-            <option value="congrats">🏆 Congratulations / Success</option>
+            <option value="birthday">🎂 Birthday</option>
+            <option value="anniversary">💍 Anniversary</option>
+            <option value="festival">🎉 Festival</option>
+            <option value="success">🏆 Success / Congrats</option>
         </select>
 
-        <label>❤️ Select Relation (Rishta Chunein)</label>
-        <select id="relation">
-            <option value="bestie">Best Friend (BFF)</option>
-            <option value="partner">Life Partner / Girlfriend / Boyfriend</option>
-            <option value="sibling">Brother / Sister</option>
-            <option value="parents">Mother / Father</option>
-            <option value="general">Anyone / Friend</option>
+        <label>✍️ Select or Write Shayari / Message</label>
+        <select id="shayariType" onchange="toggleCustomShayari()">
+            <option value="ai">🤖 Generate Fresh AI Shayari</option>
+            <option value="romantic">💖 Romantic & Sweet Shayari</option>
+            <option value="funny">🔥 Fun & Dosti Shayari</option>
+            <option value="custom">✏️ Write Your Own Custom Shayari</option>
         </select>
+        <textarea id="customShayariBox" style="display:none;" placeholder="Apni custom shayari yahan likhein..."></textarea>
 
-        <label>👤 Jiska naam hai (Recipient Name)</label>
-        <input type="text" id="nameInput" placeholder="Jaise: Priya, Rahul, Ma...">
+        <label>👤 Recipient Name</label>
+        <input type="text" id="nameInput" placeholder="Jaise: Priya, Rahul...">
 
-        <button class="btn-main" onclick="generateWish()">✨ Generate Special Wish & Gift</button>
+        <!-- PAID ONLY FEATURES WRAPPER -->
+        <div id="paidFeatureSection" style="border: 2px dashed #764ba2; padding: 10px; border-radius: 10px; margin-bottom: 12px; background: #faf5ff; display:none;">
+            <div style="color: #764ba2; font-weight: bold; font-size: 12px; margin-bottom: 8px;">💎 Paid Exclusive Features Active</div>
+            
+            <label>📸 Upload Photos (Up to 10 Photos)</label>
+            <input type="file" id="imageInput" accept="image/*" multiple onchange="handleImageUpload()">
+            <div class="photo-preview" id="imagePreviewContainer"></div>
+
+            <label>📖 Special Memory / Secret Story</label>
+            <textarea id="memoryInput" placeholder="Apni koi khaas yaad ya purani baat yahan likhein jo card mein dikhegi..."></textarea>
+
+            <label>🎙️ Record Voice Note (Audio Wish)</label>
+            <button type="button" id="recordBtn" class="btn-main" style="background:#e91e63; font-size:14px; padding:8px; margin-bottom:8px;" onclick="toggleRecording()">🔴 Start Voice Recording</button>
+            <audio id="audioPlayback" controls style="width:100%; display:none;"></audio>
+        </div>
+
+        <div id="freePhotoSection">
+            <label>📸 Upload Photos (Free: Max 2)</label>
+            <input type="file" id="freeImageInput" accept="image/*" multiple onchange="handleFreeImageUpload()">
+            <div class="photo-preview" id="freeImagePreviewContainer"></div>
+        </div>
+
+        <div style="background: #fff8e1; padding: 10px; border-radius: 6px; font-size: 11px; margin-bottom: 12px; text-align: left; border: 1px solid #ffe0b2;" id="upgradeBanner">
+            💎 <b>Want Voice Note & 10 Photos?</b><br>
+            Creator ko UPI pe ₹20 dekar unlock karein. <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('wish_paid', 'true')">Pay via UPI</a>
+        </div>
+
+        <button class="btn-main" onclick="generatePortalCard()">✨ Create & Preview Card</button>
 
         <div class="wish-card" id="wishCard">
+            <div id="cardImages" class="photo-preview"></div>
             <div class="sub-text" id="wishText"></div>
-            
-            <a id="waShareBtn" class="btn-wa" href="#" target="_blank">💬 Share on WhatsApp</a>
-            <button class="btn-share" onclick="shareAnywhere()">🚀 Share Everywhere (All Apps)</button>
-
-            <div class="gift-box">
-                <div style="font-size: 13px; font-weight: bold; color: #d63384; margin-bottom: 4px;" id="giftTitle">🎁 Recommended Surprise Gift</div>
-                <div style="font-size: 12px; color: #555; margin-bottom: 8px;" id="giftDesc"></div>
-                <div class="store-grid">
-                    <a id="amazonBtn" href="#" target="_blank" class="store-btn" style="background: #ff9900;">🛍️ Amazon</a>
-                    <a id="flipkartBtn" href="#" target="_blank" class="store-btn" style="background: #2874f0;">🛒 Flipkart</a>
-                </div>
+            <div id="cardMemory" class="memory-box" style="display:none;"></div>
+            <div id="cardAudioContainer" class="audio-box" style="display:none;">
+                <div style="font-size:12px; font-weight:bold; color:#2e7d32; margin-bottom:4px;">🎙️ Voice Note from Sender:</div>
+                <audio id="cardAudio" controls style="width:100%;"></audio>
             </div>
-
-            <div class="tip-box">
-                ☕ Code pasand aaya ya site achi lagi? Creator ko support karein:
-                <br>
-                <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok%20Kumar&cu=INR" class="btn-upi">⚡ Send ₹10 / ₹20 Tip via UPI</a>
-            </div>
+            <button class="btn-share" onclick="shareEverywhere()">🚀 Share Wish & Memories Everywhere</button>
         </div>
     </div>
 
     <script>
-        function generateWish() {
+        const CORRECT_PASSWORD = "alok123";
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordedAudioUrl = "";
+        let uploadedImages = [];
+
+        window.onload = function() {
+            // Check if user already used free wish
+            const isPaid = localStorage.getItem('wish_paid') === 'true';
+            const hasUsedFree = localStorage.getItem('wish_used_free') === 'true';
+
+            if (isPaid) {
+                activatePaidMode();
+            } else if (hasUsedFree) {
+                // Hide auth and show limit screen if trying to re-access without paying
+            }
+        };
+
+        function checkPassword() {
+            const enteredPass = document.getElementById('passInput').value;
+            if (enteredPass === CORRECT_PASSWORD) {
+                document.getElementById('authScreen').style.display = 'none';
+                
+                const isPaid = localStorage.getItem('wish_paid') === 'true';
+                const hasUsedFree = localStorage.getItem('wish_used_free') === 'true';
+
+                if (!isPaid && hasUsedFree) {
+                    document.getElementById('limitScreen').style.display = 'block';
+                } else {
+                    document.getElementById('mainApp').style.display = 'block';
+                    if (isPaid) activatePaidMode();
+                }
+            } else {
+                document.getElementById('errorMsg').innerText = "❌ Galat password! Dobara koshish karein.";
+            }
+        }
+
+        function verifyPaidUser() {
+            localStorage.setItem('wish_paid', 'true');
+            document.getElementById('limitScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            activatePaidMode();
+        }
+
+        function activatePaidMode() {
+            document.getElementById('modeTitle').innerText = "💎 Paid Pro Studio (Unlimited, 10 Photos & Voice Note)";
+            document.getElementById('paidFeatureSection').style.display = 'block';
+            document.getElementById('freePhotoSection').style.display = 'none';
+            document.getElementById('upgradeBanner').style.display = 'none';
+        }
+
+        function toggleCustomShayari() {
+            const val = document.getElementById('shayariType').value;
+            document.getElementById('customShayariBox').style.display = (val === 'custom') ? 'block' : 'none';
+        }
+
+        // Free Image Upload (Max 2)
+        function handleFreeImageUpload() {
+            const input = document.getElementById('freeImageInput');
+            const container = document.getElementById('freeImagePreviewContainer');
+            container.innerHTML = "";
+            uploadedImages = [];
+
+            if (input.files.length > 2) {
+                alert("⚠️ Free version mein sirf 2 photos allowed hain! Jyada ke liye paid mode use karein.");
+            }
+            const limit = Math.min(input.files.length, 2);
+            for (let i = 0; i < limit; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push(e.target.result);
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    container.appendChild(img);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+        // Paid Image Upload (Max 10)
+        function handleImageUpload() {
+            const input = document.getElementById('imageInput');
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = "";
+            uploadedImages = [];
+
+            const limit = Math.min(input.files.length, 10);
+            for (let i = 0; i < limit; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push(e.target.result);
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    container.appendChild(img);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+        // Voice Recording Logic
+        let isRecording = false;
+        async function toggleRecording() {
+            const btn = document.getElementById('recordBtn');
+            const audioPlayback = document.getElementById('audioPlayback');
+
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        recordedAudioUrl = URL.createObjectURL(audioBlob);
+                        audioPlayback.src = recordedAudioUrl;
+                        audioPlayback.style.display = 'block';
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    btn.innerText = "⏹️ Stop & Save Voice Note";
+                    btn.style.background = "#c62828";
+                } catch (err) {
+                    alert("Microphone access denied or not supported.");
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                btn.innerText = "🔴 Record Again";
+                btn.style.background = "#e91e63";
+            }
+        }
+
+        function generatePortalCard() {
             const name = document.getElementById('nameInput').value.trim() || 'Dost';
             const occasion = document.getElementById('occasion').value;
-            const relation = document.getElementById('relation').value;
-            
-            let wish = "";
-            let giftTitleText = "🎁 Best Surprise Gift Idea";
-            let giftDescText = "Check out top rated gifts online!";
-            let searchQuery = "best gifts";
+            const shayariMode = document.getElementById('shayariType').value;
+            const isPaid = localStorage.getItem('wish_paid') === 'true';
 
-            if (occasion === 'birthday') {
-                if (relation === 'bestie') {
-                    wish = `🎂 Happy Birthday to my absolute favorite human, ${name}! 🎉 Tu meri life ka sabse bada entertainer hai. Party kab de raha hai?`;
-                    giftTitleText = "🎁 Trendy Tech & Party Gadgets";
-                    giftDescText = "Wireless earbuds, Bluetooth speakers, or cool LED lamp.";
-                    searchQuery = "wireless bluetooth earphones";
-                } else if (relation === 'partner') {
-                    wish = `❤️ Happy Birthday my love, ${name}! ✨ Meri duniya ki sabse pyari hasi tere chehre par hamesha bani rahe. Love you! 🥰`;
-                    giftTitleText = "💍 Romantic Personalized Gifts";
-                    giftDescText = "Custom photo lamps, couple bracelets, or rose bouquets.";
-                    searchQuery = "couple gift items romantic";
-                } else if (relation === 'sibling') {
-                    wish = `🥳 Happy Birthday ${name}! 🎂 Chahe hum kitna bhi ladein, par mere liye sabse special tu hi hai re! Have a blast! 🎉`;
-                    giftTitleText = "🎁 Fun Gaming & Utility Gadgets";
-                    giftDescText = "Smartwatches, backpacks, or trendy sippers.";
-                    searchQuery = "smartwatch under 2000";
-                } else {
-                    wish = `🎂 Wish you a very Happy Birthday, ${name}! 🎉 Bhagwan kare aapki zindagi khushiyon aur kamyabi se bhar jaye! ✨`;
-                    giftTitleText = "🎁 Classic Gift Options";
-                    giftDescText = "Greeting card hampers, wallets, or premium pens.";
-                    searchQuery = "gift items for birthday";
-                }
-            } else if (occasion === 'anniversary') {
-                wish = `💍 Happy Anniversary, ${name}! ✨ Tum dono ki jodi duniya ki sabse best jodi bani rahe. Hamesha khush raho! 🥂`;
-                giftTitleText = "🎁 Couple & Home Decor Gifts";
-                giftDescText = "Couple mugs, customized frames, or home decor items.";
-                searchQuery = "couple anniversary gifts";
-            } else if (occasion === 'festival') {
-                wish = `🎉 Aapko aur aapke poore parivar ko tyohar ki dher saari shubhkaamnayein, ${name}! Yeh tyohar aapke jeevan mein roshni aur khushiyan laye. 🪔✨`;
-                giftTitleText = "🎁 Festive Sweets & Hampers";
-                giftDescText = "Chocolate gift hampers, dry fruit boxes, or decorative lights.";
-                searchQuery = "diwali gift hampers chocolates";
+            // Mark free user as used
+            if (!isPaid) {
+                localStorage.setItem('wish_used_free', 'true');
+            }
+            
+            let finalWish = "";
+            if (shayariMode === 'custom') {
+                finalWish = document.getElementById('customShayariBox').value || `Happy ${occasion}, ${name}!`;
+            } else if (shayariMode === 'romantic') {
+                finalWish = `✨ ${name}, tere aane se zindagi khubsurat ho gayi hai. Har pal bas teri khushi ki dua karte hain! ❤️`;
+            } else if (shayariMode === 'funny') {
+                finalWish = `🔥 Oye ${name}, party kab de raha hai bhai? Tu hi hai apna sabse bada superstar! 😎`;
             } else {
-                wish = `🏆 Congratulations, ${name}! ✨ Tumne apni mehnat se prove kar diya ki tum har kamyabi ke haqdaar ho. Keep shining! 🚀`;
-                giftTitleText = "🎁 Success & Productivity Gifts";
-                giftDescText = "Executive planners, premium metal pens, or desk organizers.";
-                searchQuery = "planners and office gifts";
+                const aiPools = [
+                    `🌟 ${name}, khuda se kya maange tere vaste, zindagi ki har khushi tere raaste! Happy ${occasion}! ✨`,
+                    `🚀 Sitaron se aage jahan aur bhi hain, ${name} ke liye nayi kamyabiyan aur bhi hain! Congratulations! 💫`,
+                    `🎉 Din mahina aur saal, har lamha tera bemisaal rahe ${name}! Wishing you a wonderful ${occasion}! 🥂`
+                ];
+                finalWish = aiPools[Math.floor(Math.random() * aiPools.length)];
             }
 
-            document.getElementById('wishText').innerText = wish;
-            document.getElementById('giftTitle').innerText = giftTitleText;
-            document.getElementById('giftDesc').innerText = giftDescText;
+            document.getElementById('wishText').innerText = finalWish;
 
-            // Affiliate Search Links
-            document.getElementById('amazonBtn').href = `https://www.amazon.in/s?k=${encodeURIComponent(searchQuery)}`;
-            document.getElementById('flipkartBtn').href = `https://www.flipkart.com/search?q=${encodeURIComponent(searchQuery)}`;
+            // Images
+            const cardImgContainer = document.getElementById('cardImages');
+            cardImgContainer.innerHTML = "";
+            uploadedImages.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                cardImgContainer.appendChild(img);
+            });
 
-            // WhatsApp Share Link
-            const shareText = `${wish}\n\n👉 Apno ke liye aisi pyari wish aur surprise gift yahan dekhein: https://alok321ssky-web.github.io/wish-magic/`;
-            document.getElementById('waShareBtn').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+            // Memory Box (Paid only)
+            if (isPaid) {
+                const memoryText = document.getElementById('memoryInput').value.trim();
+                const memoryBox = document.getElementById('cardMemory');
+                if (memoryText) {
+                    memoryBox.innerHTML = `📖 <b>Special Memory / Story:</b><br>${memoryText}`;
+                    memoryBox.style.display = 'block';
+                } else {
+                    memoryBox.style.display = 'none';
+                }
+
+                // Audio
+                const audioContainer = document.getElementById('cardAudioContainer');
+                const cardAudio = document.getElementById('cardAudio');
+                if (recordedAudioUrl) {
+                    cardAudio.src = recordedAudioUrl;
+                    audioContainer.style.display = 'block';
+                } else {
+                    audioContainer.style.display = 'none';
+                }
+            }
 
             const card = document.getElementById('wishCard');
             card.style.display = 'block';
             card.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function shareAnywhere() {
+        function shareEverywhere() {
             const wish = document.getElementById('wishText').innerText;
-            const shareText = `${wish}\n\n👉 Apno ke liye aisi pyari wish aur surprise gift yahan dekhein: https://alok321ssky-web.github.io/wish-magic/`;
+            const shareText = `${wish}\n\n✨ Created via Secret Wish & Memory Portal`;
 
             if (navigator.share) {
                 navigator.share({
-                    title: '✨ Special Wish & Gift',
+                    title: 'Special Wish Card',
                     text: shareText,
-                    url: 'https://alok321ssky-web.github.io/wish-magic/'
+                    url: window.location.href
                 }).catch((error) => console.log('Sharing failed', error));
             } else {
                 window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');

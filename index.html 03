@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Wishes & Gift Finder 🎁</title>
+    
+    <!-- Open Graph Meta Tags for Social Sharing Previews -->
+    <meta property="og:title" content="✨ Special Wish & Surprise Gift for You!" />
+    <meta property="og:description" content="Apno ke liye aisi pyari wish aur surprise gift yahan dekhein. Click to view your special card!" />
+    <meta property="og:url" content="https://alok321ssky-web.github.io/wish-magic/" />
+    <meta property="og:type" content="website" />
+
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; padding: 15px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .container { background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-align: center; margin-top: 20px; margin-bottom: 20px; }
+        h1 { color: #d63384; font-size: 24px; margin-bottom: 4px; }
+        .sub { color: #666; font-size: 13px; margin-bottom: 16px; }
+        label { display: block; text-align: left; font-size: 13px; font-weight: bold; color: #444; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ffb6c1; font-size: 14px; outline: none; background: #fff5f8; }
+        .btn-main { width: 100%; background: #d63384; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3); transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); }
+        .wish-card { margin-top: 20px; padding: 15px; border-radius: 12px; background: #fff0f3; border: 2px dashed #ffb6c1; display: none; text-align: left; }
+        .sub-text { font-size: 15px; color: #333; line-height: 1.5; font-weight: 500; margin-bottom: 15px; }
+        .btn-wa { display: block; text-align: center; background: #25d366; color: white; padding: 10px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; box-shadow: 0 3px 8px rgba(37, 211, 102, 0.3); }
+        .btn-share { display: block; width: 100%; text-align: center; background: #0088cc; color: white; padding: 10px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; margin-bottom: 10px; box-shadow: 0 3px 8px rgba(0, 136, 204, 0.3); font-size: 14px; }
+        .gift-box { margin-top: 15px; padding: 12px; border-radius: 10px; background: #fff8fb; border: 1px solid #ffb6c1; text-align: center; }
+        .store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+        .store-btn { display: block; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; color: white; text-decoration: none; }
+        .tip-box { margin-top: 15px; padding: 10px; border-radius: 8px; background: #f8f9fa; border: 1px solid #dee2e6; font-size: 12px; text-align: center; color: #555; }
+        .btn-upi { display: inline-block; margin-top: 6px; background: #6f42c1; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>✨ All Wishes Magic</h1>
+        <p class="sub">🎂 Birthday, Anniversary aur Tyohar ki pyari wishes & gifts!</p>
+
+        <label>🎯 Select Occasion (Mauka Chunein)</label>
+        <select id="occasion">
+            <option value="birthday">🎂 Birthday Special</option>
+            <option value="anniversary">💍 Marriage Anniversary</option>
+            <option value="festival">🎉 Festival / Tyohar (Diwali, Holi, Eid, Rakhi)</option>
+            <option value="congrats">🏆 Congratulations / Success</option>
+        </select>
+
+        <label>❤️ Select Relation (Rishta Chunein)</label>
+        <select id="relation">
+            <option value="bestie">Best Friend (BFF)</option>
+            <option value="partner">Life Partner / Girlfriend / Boyfriend</option>
+            <option value="sibling">Brother / Sister</option>
+            <option value="parents">Mother / Father</option>
+            <option value="general">Anyone / Friend</option>
+        </select>
+
+        <label>👤 Jiska naam hai (Recipient Name)</label>
+        <input type="text" id="nameInput" placeholder="Jaise: Priya, Rahul, Ma...">
+
+        <button class="btn-main" onclick="generateWish()">✨ Generate Special Wish & Gift</button>
+
+        <div class="wish-card" id="wishCard">
+            <div class="sub-text" id="wishText"></div>
+            
+            <a id="waShareBtn" class="btn-wa" href="#" target="_blank">💬 Share on WhatsApp</a>
+            <button class="btn-share" onclick="shareAnywhere()">🚀 Share Everywhere (All Apps)</button>
+
+            <div class="gift-box">
+                <div style="font-size: 13px; font-weight: bold; color: #d63384; margin-bottom: 4px;" id="giftTitle">🎁 Recommended Surprise Gift</div>
+                <div style="font-size: 12px; color: #555; margin-bottom: 8px;" id="giftDesc"></div>
+                <div class="store-grid">
+                    <a id="amazonBtn" href="#" target="_blank" class="store-btn" style="background: #ff9900;">🛍️ Amazon</a>
+                    <a id="flipkartBtn" href="#" target="_blank" class="store-btn" style="background: #2874f0;">🛒 Flipkart</a>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                ☕ Code pasand aaya ya site achi lagi? Creator ko support karein:
+                <br>
+                <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok%20Kumar&cu=INR" class="btn-upi">⚡ Send ₹10 / ₹20 Tip via UPI</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateWish() {
+            const name = document.getElementById('nameInput').value.trim() || 'Dost';
+            const occasion = document.getElementById('occasion').value;
+            const relation = document.getElementById('relation').value;
+            
+            let wish = "";
+            let giftTitleText = "🎁 Best Surprise Gift Idea";
+            let giftDescText = "Check out top rated gifts online!";
+            let searchQuery = "best gifts";
+
+            if (occasion === 'birthday') {
+                if (relation === 'bestie') {
+                    wish = `🎂 Happy Birthday to my absolute favorite human, ${name}! 🎉 Tu meri life ka sabse bada entertainer hai. Party kab de raha hai?`;
+                    giftTitleText = "🎁 Trendy Tech & Party Gadgets";
+                    giftDescText = "Wireless earbuds, Bluetooth speakers, or cool LED lamp.";
+                    searchQuery = "wireless bluetooth earphones";
+                } else if (relation === 'partner') {
+                    wish = `❤️ Happy Birthday my love, ${name}! ✨ Meri duniya ki sabse pyari hasi tere chehre par hamesha bani rahe. Love you! 🥰`;
+                    giftTitleText = "💍 Romantic Personalized Gifts";
+                    giftDescText = "Custom photo lamps, couple bracelets, or rose bouquets.";
+                    searchQuery = "couple gift items romantic";
+                } else if (relation === 'sibling') {
+                    wish = `🥳 Happy Birthday ${name}! 🎂 Chahe hum kitna bhi ladein, par mere liye sabse special tu hi hai re! Have a blast! 🎉`;
+                    giftTitleText = "🎁 Fun Gaming & Utility Gadgets";
+                    giftDescText = "Smartwatches, backpacks, or trendy sippers.";
+                    searchQuery = "smartwatch under 2000";
+                } else {
+                    wish = `🎂 Wish you a very Happy Birthday, ${name}! 🎉 Bhagwan kare aapki zindagi khushiyon aur kamyabi se bhar jaye! ✨`;
+                    giftTitleText = "🎁 Classic Gift Options";
+                    giftDescText = "Greeting card hampers, wallets, or premium pens.";
+                    searchQuery = "gift items for birthday";
+                }
+            } else if (occasion === 'anniversary') {
+                wish = `💍 Happy Anniversary, ${name}! ✨ Tum dono ki jodi duniya ki sabse best jodi bani rahe. Hamesha khush raho! 🥂`;
+                giftTitleText = "🎁 Couple & Home Decor Gifts";
+                giftDescText = "Couple mugs, customized frames, or home decor items.";
+                searchQuery = "couple anniversary gifts";
+            } else if (occasion === 'festival') {
+                wish = `🎉 Aapko aur aapke poore parivar ko tyohar ki dher saari shubhkaamnayein, ${name}! Yeh tyohar aapke jeevan mein roshni aur khushiyan laye. 🪔✨`;
+                giftTitleText = "🎁 Festive Sweets & Hampers";
+                giftDescText = "Chocolate gift hampers, dry fruit boxes, or decorative lights.";
+                searchQuery = "diwali gift hampers chocolates";
+            } else {
+                wish = `🏆 Congratulations, ${name}! ✨ Tumne apni mehnat se prove kar diya ki tum har kamyabi ke haqdaar ho. Keep shining! 🚀`;
+                giftTitleText = "🎁 Success & Productivity Gifts";
+                giftDescText = "Executive planners, premium metal pens, or desk organizers.";
+                searchQuery = "planners and office gifts";
+            }
+
+            document.getElementById('wishText').innerText = wish;
+            document.getElementById('giftTitle').innerText = giftTitleText;
+            document.getElementById('giftDesc').innerText = giftDescText;
+
+            // Affiliate Search Links
+            document.getElementById('amazonBtn').href = `https://www.amazon.in/s?k=${encodeURIComponent(searchQuery)}`;
+            document.getElementById('flipkartBtn').href = `https://www.flipkart.com/search?q=${encodeURIComponent(searchQuery)}`;
+
+            // WhatsApp Share Link
+            const shareText = `${wish}\n\n👉 Apno ke liye aisi pyari wish aur surprise gift yahan dekhein: https://alok321ssky-web.github.io/wish-magic/`;
+            document.getElementById('waShareBtn').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+
+            const card = document.getElementById('wishCard');
+            card.style.display = 'block';
+            card.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function shareAnywhere() {
+            const wish = document.getElementById('wishText').innerText;
+            const shareText = `${wish}\n\n👉 Apno ke liye aisi pyari wish aur surprise gift yahan dekhein: https://alok321ssky-web.github.io/wish-magic/`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: '✨ Special Wish & Gift',
+                    text: shareText,
+                    url: 'https://alok321ssky-web.github.io/wish-magic/'
+                }).catch((error) => console.log('Sharing failed', error));
+            } else {
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>

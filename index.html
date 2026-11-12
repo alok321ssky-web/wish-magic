@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Special Wishes & Gift Finder ✨</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { margin: 0; padding: 15px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); min-height: 100vh; display: flex; justify-content: center; }
+    .container { background: #fff; width: 100%; max-width: 450px; border-radius: 18px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-align: center; }
+    h1 { color: #d63384; font-size: 24px; margin-bottom: 4px; }
+    p.sub { color: #666; font-size: 13px; margin-top: 0; margin-bottom: 16px; }
+    label { display: block; text-align: left; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 4px; }
+    input, select { width: 100%; padding: 11px; margin-bottom: 12px; border-radius: 10px; border: 1.5px solid #ffb3c1; font-size: 14px; outline: none; }
+    .btn-main { width: 100%; background: #d63384; color: #fff; border: none; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(214,51,132,0.3); }
+    .wish-card { margin-top: 18px; padding: 16px; border-radius: 12px; background: #fff0f3; border: 2px dashed #ff4d6d; display: none; }
+    .wish-text { font-size: 16px; color: #333; line-height: 1.5; font-weight: 500; margin-bottom: 12px; }
+    .btn-wa { background: #25D366; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; font-size: 14px; }
+    .gift-box { margin-top: 22px; padding: 15px; border-radius: 12px; background: #fff8f0; border: 1px solid #ffd8a8; }
+    .store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+    .store-btn { border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; color: white; }
+    .tip-box { margin-top: 20px; padding: 12px; border-radius: 10px; background: #f8f9fa; border: 1px solid #dee2e6; font-size: 13px; }
+    .btn-upi { display: inline-block; margin-top: 8px; background: #6f42c1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>✨ All Wishes Magic</h1>
+  <p class="sub">Birthday, Anniversary aur Tyohar ki pyari wishes & gifts!</p>
+
+  <label>🎉 Select Occasion (Mauka Chunein):</label>
+  <select id="occasion" onchange="updateGiftDefault()">
+    <option value="birthday">🎂 Birthday</option>
+    <option value="anniversary">💍 Marriage Anniversary</option>
+    <option value="festival">🪔 Festival / Tyohar (Diwali, Holi, Eid, Rakhi)</option>
+    <option value="congrats">🏆 Congratulations / Success</option>
+  </select>
+
+  <label>❤️ Select Relation (Rishta Chunein):</label>
+  <select id="relation" onchange="updateGiftDefault()">
+    <option value="bff">🔥 Best Friend (BFF)</option>
+    <option value="partner">❤️ Partner / Couple</option>
+    <option value="sibling">😎 Brother / Sister</option>
+    <option value="parents">🙏 Mom / Dad / Family</option>
+  </select>
+
+  <label>✍️ Name (Unka Naam):</label>
+  <input type="text" id="person-name" placeholder="Naam likhein (e.g. Rahul, Priya)...">
+
+  <button class="btn-main" onclick="generateWish()">✨ Generate Special Wish</button>
+
+  <!-- Output Wish Card -->
+  <div class="wish-card" id="wish-card">
+    <div class="wish-text" id="wish-output"></div>
+    <a id="wa-share" class="btn-wa" href="#" target="_blank">📲 Share on WhatsApp</a>
+  </div>
+
+  <!-- Multi-Store Affiliate Gift Finder -->
+  <div class="gift-box">
+    <h3 style="color: #e8590c; margin: 0 0 6px 0; font-size: 17px;">🎁 Send a Surprise Gift!</h3>
+    <p style="font-size: 12px; color: #555; margin: 0 0 10px 0;">Apni pasand ka gift search karein aur seedha unke ghar bhejein:</p>
+    <input type="text" id="gift-query" value="birthday gift for best friend" style="margin-bottom: 8px; text-align: center;">
+    <div style="font-size: 11px; color: #777; font-weight: bold;">👇 Choose Shopping App 👇</div>
+    <div class="store-grid">
+      <button class="store-btn" style="background: #FF9900; color: #111;" onclick="openStore('amazon')">🛒 Amazon</button>
+      <button class="store-btn" style="background: #2874F0;" onclick="openStore('flipkart')">⚡ Flipkart</button>
+      <button class="store-btn" style="background: #E72744;" onclick="openStore('myntra')">👗 Myntra</button>
+      <button class="store-btn" style="background: #9F2089;" onclick="openStore('meesho')">🛍️ Meesho</button>
+    </div>
+  </div>
+
+  <!-- UPI Support Section (Updated with Alok & UPI ID) -->
+  <div class="tip-box">
+    <div>Pasand aaya? Alok ko ₹10 ki Chai pilayein ☕</div>
+    <a class="btn-upi" href="upi://pay?pa=8051176873@ybl&pn=Alok&cu=INR">💜 Support Alok via UPI</a>
+  </div>
+</div>
+
+<script>
+const wishesDB = {
+  birthday: {
+    bff: ["Happy Birthday {name}! 🎉 Tu sirf dost nahi, meri zindagi ka sabse bada entertainer hai. Party kab de raha hai?", "Janamdin Mubarak mere yaar {name}! 🎂 Dosti apni hamesha top-class rahe!"],
+    partner: ["Happy Birthday my love {name}! ❤️ Tumhari ek smile meri poori duniya roshan kar deti hai.", "Janamdin ki dher saari badhaiyaan {name} ✨ Mere har din ko khaas banane ke liye shukriya!"],
+    sibling: ["Happy Birthday {name}! 😎 Ghar mein sabse zyada dimaag khane wale par sabse pyare bhai/behen ko party deni padegi!", "Janamdin Mubarak {name}! 🎂 Tu hamesha mera favourite rahega!"],
+    parents: ["Happy Birthday {name}! 🙏 Aapke aashirwad aur pyar se hi meri zindagi hai. Bhagwan aapko hamesha swasth rakhein.", "Janamdin ki hardik shubhkamnayein {name}! 🌸 Aap mere sabse bade superhero ho."]
+  },
+  anniversary: {
+    bff: ["Happy Anniversary mere yaar {name}! 💍 Tum dono ki jodi hamesha aise hi hasti-muskurati rahe!", "Shaadi ki salgirah mubarak ho {name}! 🎉 Party toh banti hai!"],
+    partner: ["Happy Anniversary my love {name}! ❤️ Tumhare saath har saal zindagi ka sabse khoobsurat safar lagta hai.", "Salgirah Mubarak {name}! 💍 Saat janam tak tera mera saath aise hi bana rahe."],
+    sibling: ["Happy Anniversary {name}! 💐 Tum dono ki jodi duniya ki sabse best jodi bani rahe!", "Shaadi ki salgirah ki dher saari badhaiyaan {name}! 🥂"],
+    parents: ["Happy Anniversary Mummy-Papa ({name})! 🙏 Aap dono ka pyar aur saath hamare poore parivaar ki taqat hai.", "Salgirah ki hardik shubhkamnayein {name}! 🌸 Bhagwan aapki jodi hamesha salamat rakhein."]
+  },
+  festival: {
+    bff: ["Happy Festival mere dost {name}! 🪔✨ Yeh tyohar teri zindagi mein dher saari khushiyaan aur masti le kar aaye!", "Tyohar ki dher saari badhaiyaan {name}! 🎉 Mithai kab khila raha hai?"],
+    partner: ["Happy Festival my love {name}! ❤️ Tumhare saath har tyohar aur bhi roshan aur khaas ho jata hai.", "Tyohar Mubarak ho {name} ✨ Hamari zindagi hamesha khushiyon se bhari rahe!"],
+    sibling: ["Happy Festival {name}! 🎁 Tyohar aa gaya hai, ab mera gift aur mithai jaldi se nikaal!", "Tyohar ki dher saari badhaiyaan {name}! 🌟 Khush raho aur muskurate raho."],
+    parents: ["Tyohar ki hardik shubhkamnayein {name}! 🙏 Aapke charno mein mera pranam, ghar mein hamesha sukh-shanti bani rahe.", "Happy Festival {name}! 🪔 Bhagwan aap par hamesha apni kripa banaye rakhein."]
+  },
+  congrats: {
+    bff: ["Congratulations {name}! 🏆🔥 Mujhe pata tha tu zaroor kuch bada karega! Ab toh badi party chahiye!", "Badhai ho mere sher {name}! 🎉 Aise hi aage badhte raho!"],
+    partner: ["So proud of you my love {name}! ❤️🏆 Tumhari mehnat rang layi, dher saari badhaiyaan!", "Congratulations {name} ✨ Tum har kamyabi ke haqdaar ho!"],
+    sibling: ["Congratulations {name}! 😎🏆 Aaj toh ghar mein teri wajah se sabse badi khushi aayi hai!", "Badhai ho {name}! 🎉 Aise hi naam roshan karte raho!"],
+    parents: ["Badhai ho {name}! 🙏🌺 Aapki mehnat aur aashirwad se hi yeh khushi ka din aaya hai.", "Heartiest Congratulations {name}! 🏆 Bhagwan aapko aur tarakki dein."]
+  }
+};
+
+function generateWish() {
+  const name = document.getElementById("person-name").value.trim() || "Dear";
+  const occ = document.getElementById("occasion").value;
+  const rel = document.getElementById("relation").value;
+  
+  const list = wishesDB[occ][rel];
+  const randomWish = list[Math.floor(Math.random() * list.length)].replace("{name}", name);
+
+  document.getElementById("wish-output").innerText = randomWish;
+  document.getElementById("wish-card").style.display = "block";
+
+  const pageUrl = window.location.href;
+  const waText = `${randomWish}\n\n✨ Apno ke liye aisi pyari wish aur surprise gift yahan dekhein: ${pageUrl}`;
+  document.getElementById("wa-share").href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waText)}`;
+}
+
+function updateGiftDefault() {
+  const occ = document.getElementById("occasion").value;
+  const rel = document.getElementById("relation").value;
+  
+  const relNames = { bff: "best friend", partner: "couple partner", sibling: "brother sister", parents: "parents" };
+  const occNames = { birthday: "birthday gift", anniversary: "anniversary gift", festival: "festival gift hamper", congrats: "congratulations gift" };
+  
+  document.getElementById("gift-query").value = `${occNames[occ]} for ${relNames[rel]}`;
+}
+
+function openStore(app) {
+  const raw = document.getElementById("gift-query").value.trim() || "gift";
+  const q = encodeURIComponent(raw);
+  let url = "";
+  if (app === "amazon") url = `https://www.amazon.in/s?k=${q}`;
+  if (app === "flipkart") url = `https://www.flipkart.com/search?q=${q}`;
+  if (app === "myntra") url = `https://www.myntra.com/${raw.toLowerCase().replace(/\s+/g, '-')}`;
+  if (app === "meesho") url = `https://www.meesho.com/search?q=${q}`;
+  window.open(url, "_blank");
+}
+</script>
+
+<!-- Cuelinks ka JavaScript code baad mein yahan </body> se theek upar paste karein -->
+</body>
+</html>

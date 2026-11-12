@@ -18,19 +18,15 @@
         .wish-card { margin-top: 20px; padding: 18px; border-radius: 12px; background: #f3f0ff; border: 2px dashed #764ba2; display: none; text-align: left; }
         .sub-text { font-size: 18px; color: #222; line-height: 1.6; font-weight: 700; margin-bottom: 15px; text-align: center; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e0d4fc; }
         .memory-box { background: #fffde7; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; font-size: 13px; color: #555; margin-bottom: 12px; text-align: left; }
-        .btn-share { display: block; width: 100%; text-align: center; background: #0088cc; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
+        .btn-share { display: block; width: 100%; text-align: center; background: #25d366; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
         .btn-create-own { display: block; width: 100%; text-align: center; background: #ff9800; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(255, 152, 0, 0.3); }
         
-        /* Display Modes: Slideshow & Collage Grid */
         .media-display-box { position: relative; width: 100%; min-height: 220px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
         
-        /* Animations */
         .anim-fade { opacity: 0; transition: opacity 1s ease-in-out; }
         .anim-fade.active { opacity: 1; }
-        
         .anim-zoom { transform: scale(0.8); opacity: 0; transition: all 1s ease-in-out; }
         .anim-zoom.active { transform: scale(1); opacity: 1; }
-
         .anim-bounce { transform: translateY(-30px); opacity: 0; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .anim-bounce.active { transform: translateY(0); opacity: 1; }
 
@@ -70,7 +66,7 @@
     <!-- 2. CREATOR STUDIO SCREEN -->
     <div class="container" id="creatorScreen">
         <h1>✨ Ultimate Wish & Animation Studio</h1>
-        <p class="sub">Occasion, Framing, Collage/Slideshow & Animation Options</p>
+        <p class="sub">Occasion, Framing, Slideshow & Short Link Generator</p>
 
         <label>🎯 Select Occasion (Mauka)</label>
         <select id="occasion" onchange="updateDefaultShayari()">
@@ -135,7 +131,7 @@
             Support karein: <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('vip_pro', 'true')">Pay ₹20 via UPI</a>
         </div>
 
-        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Secret Link</button>
+        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Short Secret Link</button>
 
         <div class="wish-card" id="creatorWishCard">
             <div class="media-display-box" id="creatorMediaBox"></div>
@@ -147,10 +143,10 @@
             </div>
             
             <div style="background: #e8f4fd; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; font-size: 11px; text-align: left;">
-                🔗 <b>Copy & Share Short Link:</b><br>
-                <span id="generatedShareLink" style="color: #0d6efd;"></span>
+                🔗 <b>Auto-Shortened Share Link:</b><br>
+                <span id="generatedShareLink" style="color: #0d6efd;">Generating short link...</span>
             </div>
-            <button class="btn-share" style="margin-top: 10px;" onclick="shareAnywhere()">🚀 Share Everywhere (All Apps)</button>
+            <button class="btn-share" style="margin-top: 10px;" onclick="shareAnywhere()">🚀 Share to Any App (WhatsApp, Insta, Telegram...)</button>
         </div>
     </div>
 
@@ -184,6 +180,7 @@
         let mediaRecorder;
         let audioChunks = [];
         let displayInterval = null;
+        let finalShortShareUrl = "";
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -294,7 +291,6 @@
                 });
                 container.appendChild(grid);
             } else {
-                // Slideshow with selected animation
                 let animClass = 'anim-fade';
                 if (mode === 'slideshow-zoom') animClass = 'anim-zoom';
                 if (mode === 'slideshow-bounce') animClass = 'anim-bounce';
@@ -323,7 +319,7 @@
             }
         }
 
-        function generateSecretLink() {
+        async function generateSecretLink() {
             const message = document.getElementById('creatorMessage').value.trim() || "Happy Wishes!";
             const name = document.getElementById('creatorName').value.trim() || "Dost";
             const memory = document.getElementById('creatorMemory').value.trim();
@@ -331,7 +327,6 @@
             const frameStyle = document.getElementById('photoFrameStyle').value;
             const displayMode = document.getElementById('displayMode').value;
 
-            // Compact payload to keep URL shorter
             const payload = {
                 m: message,
                 n: name,
@@ -346,11 +341,22 @@
             const jsonString = JSON.stringify(payload);
             const encoded = btoa(encodeURIComponent(jsonString));
             const baseUrl = window.location.href.split('?')[0];
-            const finalLink = `${baseUrl}?data=${encoded}`;
+            const longLink = `${baseUrl}?data=${encoded}`;
 
-            document.getElementById('generatedShareLink').innerText = finalLink;
-            window.shareableMsgText = `🔐 Ek Secret Protected Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalLink}`;
-            window.shareableUrl = finalLink;
+            document.getElementById('generatedShareLink মেয়').innerText = "Shortening link automatically...";
+            
+            // Auto-shorten link using TinyURL free API
+            try {
+                const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longLink)}`);
+                const shortUrl = await response.text();
+                finalShortShareUrl = shortUrl;
+                document.getElementById('generatedShareLink').innerText = shortUrl;
+            } catch (err) {
+                finalShortShareUrl = longLink;
+                document.getElementById('generatedShareLink').innerText = longLink;
+            }
+
+            window.shareableMsgText = `🔐 Ek Secret Protected Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalShortShareUrl}`;
 
             document.getElementById('creatorCardText').innerText = `${message}`;
             renderMediaBox('creatorMediaBox', uploadedImages, displayMode, frameStyle);
@@ -374,7 +380,7 @@
                 navigator.share({
                     title: '✨ Special Secret Wish',
                     text: shareText,
-                    url: window.shareableUrl
+                    url: finalShortShareUrl
                 }).catch((error) => console.log('Sharing failed', error));
             } else {
                 window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');

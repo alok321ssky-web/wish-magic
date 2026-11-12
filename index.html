@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Ultimate Secret Wish & Memory Portal</title>
+    <title>✨ Ultimate Secret Wish & Slideshow Portal</title>
     
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-user-select: none; user-select: none; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { margin: 0; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
         .container { background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
         h1 { color: #764ba2; font-size: 22px; margin-bottom: 4px; }
         .sub { color: #666; font-size: 12px; margin-bottom: 16px; }
         label { display: block; text-align: left; font-size: 13px; font-weight: bold; color: #444; margin-bottom: 4px; }
-        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; outline: none; background: #f9f9f9; -webkit-user-select: text; user-select: text; }
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; outline: none; background: #f9f9f9; }
         .btn-main { width: 100%; background: #764ba2; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3); }
         .btn-main:active { transform: scale(0.98); }
         .wish-card { margin-top: 20px; padding: 18px; border-radius: 12px; background: #f3f0ff; border: 2px dashed #764ba2; display: none; text-align: left; }
@@ -20,17 +20,24 @@
         .memory-box { background: #fffde7; padding: 10px; border-radius: 8px; border: 1px solid #ffe082; font-size: 13px; color: #555; margin-bottom: 12px; text-align: left; }
         .btn-share { display: block; width: 100%; text-align: center; background: #25d366; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 8px; border: none; cursor: pointer; font-size: 15px; }
         .btn-create-own { display: block; width: 100%; text-align: center; background: #ff9800; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(255, 152, 0, 0.3); }
+        
+        /* Slideshow Animation Styles */
+        .slideshow-container { position: relative; width: 100%; height: 220px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
+        .slide-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out, transform 1s ease-in-out; transform: scale(1.05); }
+        .slide-img.active { opacity: 1; transform: scale(1); }
+
         .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
-        .photo-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
+        .photo-preview img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
         .audio-box { margin-bottom: 12px; text-align: left; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px solid #c8e6c9; }
-        .response-box { background: #e3f2fd; padding: 12px; border-radius: 8px; border: 1px solid #90caf9; margin-top: 15px; text-align: left; }
+        .store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+        .store-btn { display: block; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; color: white; text-decoration: none; }
         
         #viewerPassScreen { display: none; }
         #creatorScreen { display: block; }
         #viewerShowScreen { display: none; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <!-- 1. VIEWER PASSWORD & NAME SCREEN -->
     <div class="container" id="viewerPassScreen">
@@ -46,8 +53,8 @@
 
     <!-- 2. CREATOR STUDIO SCREEN -->
     <div class="container" id="creatorScreen">
-        <h1>✨ Ultimate Secret Wish Studio</h1>
-        <p class="sub">Protected Wish, Voice Note, Photos & Security Shield</p>
+        <h1>✨ Ultimate Wish & Slideshow Studio</h1>
+        <p class="sub">Occasion, Shayari, Voice Note & Slideshow Photo Studio</p>
 
         <label>🎯 Select Occasion (Mauka)</label>
         <select id="occasion" onchange="updateDefaultShayari()">
@@ -62,10 +69,10 @@
         <label>✍️ Write Your Special Shayari / Message</label>
         <textarea id="creatorMessage" rows="3" placeholder="Apni pyari wish ya shayari yahan likhein...">🎂 Happy Birthday to my absolute favorite human! Have a blast! 🎉</textarea>
 
-        <label>👤 Jisko bhejna hai uska Naam (Expected Recipient)</label>
+        <label>👤 Jisko bhejna hai uska Naam</label>
         <input type="text" id="creatorName" placeholder="Jaise: Priya, Rahul, Ma...">
 
-        <label>📸 Upload Photos (Free: 2 | Pro: Up to 10)</label>
+        <label>📸 Upload Photos (Free: Max 5 | VIP Pro: Up to 20 Photos)</label>
         <input type="file" id="imageInput" accept="image/*" multiple onchange="handleImageUpload()">
         <div class="photo-preview" id="imagePreviewContainer"></div>
 
@@ -79,16 +86,17 @@
         <label>🔑 Set a Secret Password</label>
         <input type="text" id="creatorPassword" placeholder="Jaise: 1234, loveyou...">
 
-        <!-- MONETIZATION / SUPPORT CHAI BOX -->
+        <!-- SUPPORT CREATOR BOX -->
         <div style="background: #fff8e1; padding: 12px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; text-align: left; border: 1px solid #ffe0b2;">
-            ☕ <b>Yeh Magic Pasand Aaya?</b><br>
-            Ek Cup Chai ke Saath Creator ko Support Karein aur Unlimited Pro Features (10 Photos + Voice Note) Unlock Karein: <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('portal_pro', 'true')">Pay ₹20 via UPI</a>
+            ☕ <b>Support Creator & Unlock VIP Pro Mode (20 Photos + Slideshow):</b><br>
+            Support karein: <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('vip_pro', 'true')">Pay ₹20 via UPI</a>
         </div>
 
-        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Protected Secret Link</button>
+        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Secret Link</button>
 
         <div class="wish-card" id="creatorWishCard">
-            <div id="creatorCardImages" class="photo-preview"></div>
+            <!-- Slideshow Preview -->
+            <div class="slideshow-container" id="creatorSlideshow"></div>
             <div class="sub-text" id="creatorCardText"></div>
             <div id="creatorCardMemory" class="memory-box" style="display:none;"></div>
             <div id="creatorCardAudioContainer" class="audio-box" style="display:none;">
@@ -107,7 +115,8 @@
     <!-- 3. VIEWER SHOW SCREEN -->
     <div class="container" id="viewerShowScreen">
         <h1 id="viewerHeading">✨ Special Wish For You ✨</h1>
-        <div id="viewerCardImages" class="photo-preview"></div>
+        <!-- Animated Slideshow Viewer -->
+        <div class="slideshow-container" id="viewerSlideshow"></div>
         <div class="sub-text" id="viewerCardText"></div>
         <div id="viewerCardMemory" class="memory-box" style="display:none;"></div>
         <div id="viewerCardAudioContainer" class="audio-box" style="display:none;">
@@ -115,11 +124,15 @@
             <audio id="viewerCardAudio" controls style="width:100%;"></audio>
         </div>
 
-        <!-- RECIPIENT RESPONSE / FEEDBACK BOX -->
-        <div class="response-box">
-            <div style="font-size: 13px; font-weight: bold; color: #1976d2; margin-bottom: 6px;">💬 Send Reply / Reaction to Sender:</div>
-            <input type="text" id="replyMessage" placeholder="Apna reply ya feedback yahan likhein..." style="margin-bottom: 6px;">
-            <button class="btn-main" style="background: #1976d2; padding: 8px; font-size: 13px;" onclick="sendReplyToSender()">📲 Send Reply via WhatsApp</button>
+        <!-- SHOPPING APPS & GIFT RECOMMENDATIONS -->
+        <div style="background: #fff0f3; padding: 12px; border-radius: 8px; border: 1px solid #ffb6c1; margin-top: 15px; text-align: left;">
+            🎁 <b>Surprise Gift Shopping Store:</b><br>
+            <div class="store-grid">
+                <a href="https://www.amazon.in" target="_blank" class="store-btn" style="background: #ff9900;">🛍️ Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank" class="store-btn" style="background: #2874f0;">🛒 Flipkart</a>
+                <a href="https://www.myntra.com" target="_blank" class="store-btn" style="background: #ff3f6c;">👗 Myntra</a>
+                <a href="https://www.meesho.com" target="_blank" class="store-btn" style="background: #f43397;">🛍️ Meesho</a>
+            </div>
         </div>
 
         <button class="btn-create-own" onclick="resetToCreatorMode()">✨ Create Your Own Wish</button>
@@ -130,15 +143,7 @@
         let recordedAudioBase64 = "";
         let mediaRecorder;
         let audioChunks = [];
-        let currentSenderData = null;
-
-        // Anti-Screenshot & Screen Blur Protection
-        document.addEventListener('keyup', (e) => {
-            if (e.key == 'PrintScreen') {
-                navigator.clipboard.writeText('');
-                alert('⚠️ Screenshot Protection Active: Screenshots are disabled for security!');
-            }
-        });
+        let slideshowInterval = null;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -167,11 +172,11 @@
             container.innerHTML = "";
             uploadedImages = [];
 
-            const isPro = localStorage.getItem('portal_pro') === 'true';
-            const maxLimit = isPro ? 10 : 2;
+            const isVip = localStorage.getItem('vip_pro') === 'true';
+            const maxLimit = isVip ? 20 : 5; // Free max 5, VIP Pro max 20
 
             if (input.files.length > maxLimit) {
-                alert(`⚠️ Free version mein sirf ${maxLimit} photos allowed hain! Pro unlock karne ke liye Chai support use karein.`);
+                alert(`⚠️ Free version mein sirf ${maxLimit} photos allowed hain! VIP Pro unlock karne ke liye support use karein.`);
             }
 
             const limit = Math.min(input.files.length, maxLimit);
@@ -189,9 +194,9 @@
 
         let isRecording = false;
         async function toggleRecording() {
-            const isPro = localStorage.getItem('portal_pro') === 'true';
-            if (!isPro) {
-                alert("🔒 Voice recording is a Pro feature! Unlock by supporting creator with Chai.");
+            const isVip = localStorage.getItem('vip_pro') === 'true';
+            if (!isVip) {
+                alert("🔒 Voice recording is a VIP Pro feature! Unlock by supporting creator.");
                 return;
             }
 
@@ -231,16 +236,32 @@
             }
         }
 
-        function generateSecretLink() {
-            // Free limit check: Can only create 1 free wish unless Pro
-            const hasUsedFree = localStorage.getItem('wish_used_free') === 'true';
-            const isPro = localStorage.getItem('portal_pro') === 'true';
+        function startSlideshow(containerId, images) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            if (!images || images.length === 0) return;
 
-            if (hasUsedFree && !isPro) {
-                alert("⚠️ Aapne free wish limit use kar li hai! Unlimited aur Pro features ke liye 'Pay ₹20 via UPI' par click karke support karein.");
-                return;
+            images.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'slide-img' + (index === 0 ? ' active' : '');
+                container.appendChild(img);
+            });
+
+            if (images.length > 1) {
+                if (slideshowInterval) clearInterval(slideshowInterval);
+                let currentIndex = 0;
+                slideshowInterval = setInterval(() => {
+                    const slides = container.getElementsByClassName('slide-img');
+                    if (slides.length === 0) return;
+                    slides[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    slides[currentIndex].classList.add('active');
+                }, 2500); // 2.5 seconds per slide animation
             }
+        }
 
+        function generateSecretLink() {
             const message = document.getElementById('creatorMessage').value.trim() || "Happy Wishes!";
             const name = document.getElementById('creatorName').value.trim() || "Dost";
             const memory = document.getElementById('creatorMemory').value.trim();
@@ -260,21 +281,11 @@
             const baseUrl = window.location.href.split('?')[0];
             const finalLink = `${baseUrl}?data=${encoded}`;
 
-            if (!isPro) {
-                localStorage.setItem('wish_used_free', 'true');
-            }
-
             document.getElementById('generatedShareLink').innerText = finalLink;
             window.shareableMsgText = `🔐 Ek Secret Protected Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalLink}`;
 
             document.getElementById('creatorCardText').innerText = `${message}`;
-            const imgContainer = document.getElementById('creatorCardImages');
-            imgContainer.innerHTML = "";
-            uploadedImages.forEach(src => {
-                const img = document.createElement('img');
-                img.src = src;
-                imgContainer.appendChild(img);
-            });
+            startSlideshow('creatorSlideshow', uploadedImages);
 
             if (memory) {
                 document.getElementById('creatorCardMemory').innerHTML = `📖 <b>Memory:</b><br>${memory}`;
@@ -302,7 +313,6 @@
             try {
                 const jsonString = decodeURIComponent(atob(encodedData));
                 const data = JSON.parse(jsonString);
-                currentSenderData = data;
 
                 if (enteredPass === data.p) {
                     document.getElementById('viewerPassScreen').style.display = 'none';
@@ -312,15 +322,7 @@
                     document.getElementById('viewerHeading').innerText = `✨ Special Wish For ${displayName} ✨`;
                     document.getElementById('viewerCardText').innerText = `${data.m}`;
                     
-                    const imgContainer = document.getElementById('viewerCardImages');
-                    imgContainer.innerHTML = "";
-                    if (data.img) {
-                        data.img.forEach(src => {
-                            const img = document.createElement('img');
-                            img.src = src;
-                            imgContainer.appendChild(img);
-                        });
-                    }
+                    startSlideshow('viewerSlideshow', data.img);
 
                     if (data.mem) {
                         document.getElementById('viewerCardMemory').innerHTML = `📖 <b>Memory & Story:</b><br>${data.mem}`;
@@ -339,17 +341,8 @@
             }
         }
 
-        function sendReplyToSender() {
-            const replyText = document.getElementById('replyMessage').value.trim();
-            if (!replyText) {
-                alert("Pehle apna reply likhein!");
-                return;
-            }
-            const finalWhatsAppText = `💬 Secret Wish Reply from Viewer:\n"${replyText}"`;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(finalWhatsAppText)}`, '_blank');
-        }
-
         function resetToCreatorMode() {
+            if (slideshowInterval) clearInterval(slideshowInterval);
             window.location.href = window.location.href.split('?')[0];
         }
     </script>

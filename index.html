@@ -13,8 +13,8 @@
 
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { margin: 0; padding: 15px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .container { background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-align: center; }
+        body { margin: 0; padding: 15px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .container { background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-align: center; margin-top: 20px; margin-bottom: 20px; }
         h1 { color: #d63384; font-size: 24px; margin-bottom: 4px; }
         .sub { color: #666; font-size: 13px; margin-bottom: 16px; }
         label { display: block; text-align: left; font-size: 13px; font-weight: bold; color: #444; margin-bottom: 4px; }
@@ -38,7 +38,7 @@
         <p class="sub">🎂 Birthday, Anniversary aur Tyohar ki pyari wishes & gifts!</p>
 
         <label>🎯 Select Occasion (Mauka Chunein)</label>
-        <select id="occasion" onchange="updateGiftDefault()">
+        <select id="occasion">
             <option value="birthday">🎂 Birthday Special</option>
             <option value="anniversary">💍 Marriage Anniversary</option>
             <option value="festival">🎉 Festival / Tyohar (Diwali, Holi, Eid, Rakhi)</option>
@@ -143,13 +143,10 @@
             const shareText = `${wish}\n\n👉 Apno ke liye aisi pyari wish aur surprise gift yahan dekhein: https://alok321ssky-web.github.io/wish-magic/`;
             document.getElementById('waShareBtn').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
 
-            document.getElementById('wishCard').style.display = 'block';
-        }
-
-        function updateGiftDefault() {
-            // Optional dynamic updates if needed
+            const card = document.getElementById('wishCard');
+            card.style.display = 'block';
+            card.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
 </html>
-

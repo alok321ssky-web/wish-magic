@@ -31,7 +31,7 @@
         .anim-bounce.active { transform: translateY(0); opacity: 1; }
 
         .collage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; padding: 6px; }
-        .collage-grid img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; }
+        .collage-grid img, .collage-grid video { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; }
 
         .frame-polaroid { border: 6px solid #fff; border-bottom: 20px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .frame-neon { border: 3px solid #ff007f; box-shadow: 0 0 10px #ff007f; }
@@ -39,17 +39,46 @@
         .frame-classic { border: 2px solid #764ba2; border-radius: 6px; }
 
         .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center; }
-        .photo-preview img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
+        .photo-preview img, .photo-preview video { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
         .audio-box { margin-bottom: 12px; text-align: left; background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px solid #c8e6c9; }
         .store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
         .store-btn { display: block; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 12px; text-align: center; color: white; text-decoration: none; }
         
-        #viewerPassScreen { display: none; }
+        #loadingScreen, #viewerPassScreen, #viewerShowScreen { display: none; }
         #creatorScreen { display: block; }
-        #viewerShowScreen { display: none; }
     </style>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpIv2N7OsD_pebnNX2swSMH2LnQuKCt0I",
+            authDomain: "wish-magic-9506a.firebaseapp.com",
+            projectId: "wish-magic-9506a",
+            storageBucket: "wish-magic-9506a.firebasestorage.app",
+            messagingSenderId: "705799359901",
+            appId: "1:705799359901:web:f63aecbf2ad0addec8b374",
+            measurementId: "G-VGNJGXRDDJ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDoc = getDoc;
+        window.doc = doc;
+    </script>
 </head>
 <body>
+
+    <!-- LOADING SCREEN -->
+    <div class="container" id="loadingScreen">
+        <h1>✨ Loading Secret Wish...</h1>
+        <p class="sub">Please wait while we fetch your surprise!</p>
+    </div>
 
     <!-- 1. VIEWER PASSWORD & NAME SCREEN -->
     <div class="container" id="viewerPassScreen">
@@ -66,7 +95,7 @@
     <!-- 2. CREATOR STUDIO SCREEN -->
     <div class="container" id="creatorScreen">
         <h1>✨ Ultimate Wish & Animation Studio</h1>
-        <p class="sub">Occasion, Framing, Slideshow & Short Link Generator</p>
+        <p class="sub">Photos, Videos & Voice Notes with Ultra-Short Link</p>
 
         <label>🎯 Select Occasion (Mauka)</label>
         <select id="occasion" onchange="updateDefaultShayari()">
@@ -84,7 +113,7 @@
         <label>👤 Jisko bhejna hai uska Naam</label>
         <input type="text" id="creatorName" placeholder="Jaise: Priya, Rahul, Ma...">
 
-        <label>🖼️ Select Photo Frame / Style</label>
+        <label>🖼️ Select Frame / Style</label>
         <select id="photoFrameStyle">
             <option value="frame-classic">🖼️ Classic Purple Frame</option>
             <option value="frame-polaroid">📷 Polaroid Style Frame</option>
@@ -97,12 +126,12 @@
             <option value="slideshow-fade">🎞️ Slideshow (Smooth Fade Animation)</option>
             <option value="slideshow-zoom">🔍 Slideshow (Zoom In Animation)</option>
             <option value="slideshow-bounce">🎉 Slideshow (Bounce Animation)</option>
-            <option value="collage">🖼️ Collage Grid View (All Photos Together)</option>
+            <option value="collage">🖼️ Collage Grid View (Photos & Videos Together)</option>
         </select>
 
-        <label>📸 Upload Photos (Free: Max 5 | VIP Pro: Up to 20)</label>
-        <input type="file" id="imageInput" accept="image/*" multiple onchange="handleImageUpload()">
-        <div class="photo-preview" id="imagePreviewContainer"></div>
+        <label>📸 Upload Photos & Videos (Free: Max 5 total)</label>
+        <input type="file" id="mediaInput" accept="image/*,video/*" multiple onchange="handleMediaUpload()">
+        <div class="photo-preview" id="mediaPreviewContainer"></div>
 
         <label>📖 Special Memory / Secret Story</label>
         <textarea id="creatorMemory" placeholder="Koi khaas yaad ya purani baat likhein..."></textarea>
@@ -127,11 +156,11 @@
 
         <!-- SUPPORT CREATOR BOX -->
         <div style="background: #fff8e1; padding: 12px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; text-align: left; border: 1px solid #ffe0b2;">
-            ☕ <b>Support Creator & Unlock VIP Pro Mode (20 Photos):</b><br>
+            ☕ <b>Support Creator & Unlock VIP Pro Mode:</b><br>
             Support karein: <a href="upi://pay?pa=your-upi-id@paytm&pn=Alok&cu=INR" style="color: #764ba2; font-weight: bold;" onclick="localStorage.setItem('vip_pro', 'true')">Pay ₹20 via UPI</a>
         </div>
 
-        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Secret Link</button>
+        <button class="btn-main" onclick="generateSecretLink()">🚀 Generate Ultra-Short Link</button>
 
         <div class="wish-card" id="creatorWishCard">
             <div class="media-display-box" id="creatorMediaBox"></div>
@@ -143,10 +172,10 @@
             </div>
             
             <div style="background: #e8f4fd; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; font-size: 11px; text-align: left;">
-                🔗 <b>Share Link:</b><br>
+                🔗 <b>Short Share Link:</b><br>
                 <span id="generatedShareLink" style="color: #0d6efd; font-weight: bold;"></span>
             </div>
-            <button class="btn-share" style="margin-top: 10px;" onclick="shareAnywhere()">🚀 Share to Any App (WhatsApp, Insta, Telegram...)</button>
+            <button class="btn-share" style="margin-top: 10px;" onclick="shareAnywhere()">🚀 Share to Any App (WhatsApp, Insta...)</button>
         </div>
     </div>
 
@@ -175,20 +204,36 @@
     </div>
 
     <script>
-        let uploadedImages = [];
+        let uploadedMedia = []; // Stores both images and videos as objects {type: 'img'/'vid', data: base64}
         let recordedAudioBase64 = "";
         let mediaRecorder;
         let audioChunks = [];
         let displayInterval = null;
+        let fetchedWishData = null;
         let finalShortShareUrl = "";
 
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const encodedData = urlParams.get('data');
-
-            if (encodedData) {
+        window.onload = async function() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
                 document.getElementById('creatorScreen').style.display = 'none';
-                document.getElementById('viewerPassScreen').style.display = 'block';
+                document.getElementById('loadingScreen').style.display = 'block';
+
+                try {
+                    const docRef = window.doc(window.db, "wishes", hash);
+                    const docSnap = await window.getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        fetchedWishData = docSnap.data();
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('viewerPassScreen').style.display = 'block';
+                    } else {
+                        alert("⚠️ Yeh wish exist nahi karti ya expire ho chuki hai!");
+                        window.location.href = window.location.href.split('#')[0];
+                    }
+                } catch (e) {
+                    alert("⚠️ Error loading wish.");
+                    window.location.href = window.location.href.split('#')[0];
+                }
             }
         };
 
@@ -203,29 +248,41 @@
             else if (occ === 'funny') msgBox.value = "🔥 Oye party kab de raha hai bhai? Tu hi hai apna superstar! 😎";
         }
 
-        function handleImageUpload() {
-            const input = document.getElementById('imageInput');
-            const container = document.getElementById('imagePreviewContainer');
+        function handleMediaUpload() {
+            const input = document.getElementById('mediaInput');
+            const container = document.getElementById('mediaPreviewContainer');
             container.innerHTML = "";
-            uploadedImages = [];
+            uploadedMedia = [];
 
             const isVip = localStorage.getItem('vip_pro') === 'true';
-            const maxLimit = isVip ? 20 : 5;
+            const maxLimit = isVip ? 15 : 5;
 
             if (input.files.length > maxLimit) {
-                alert(`⚠️ Free version mein sirf ${maxLimit} photos allowed hain! VIP Pro unlock karne ke liye support use karein.`);
+                alert(`⚠️ Free version mein sirf ${maxLimit} files allowed hain!`);
             }
 
             const limit = Math.min(input.files.length, maxLimit);
             for (let i = 0; i < limit; i++) {
+                const file = input.files[i];
                 const reader = new FileReader();
+                const isVideo = file.type.startsWith('video');
+
                 reader.onload = function(e) {
-                    uploadedImages.push(e.target.result);
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    container.appendChild(img);
+                    const mediaObj = { type: isVideo ? 'vid' : 'img', data: e.target.result };
+                    uploadedMedia.push(mediaObj);
+
+                    let el;
+                    if (isVideo) {
+                        el = document.createElement('video');
+                        el.src = e.target.result;
+                        el.muted = true;
+                    } else {
+                        el = document.createElement('img');
+                        el.src = e.target.result;
+                    }
+                    container.appendChild(el);
                 }
-                reader.readAsDataURL(input.files[i]);
+                reader.readAsDataURL(file);
             }
         }
 
@@ -273,21 +330,32 @@
             }
         }
 
-        function renderMediaBox(containerId, images, mode, frameStyle) {
+        function renderMediaBox(containerId, mediaList, mode, frameStyle) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
-            if (!images || images.length === 0) return;
+            if (!mediaList || mediaList.length === 0) return;
 
             if (displayInterval) clearInterval(displayInterval);
 
             if (mode === 'collage') {
                 const grid = document.createElement('div');
                 grid.className = 'collage-grid';
-                images.forEach(src => {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.className = frameStyle;
-                    grid.appendChild(img);
+                mediaList.forEach(item => {
+                    let el;
+                    if (item.type === 'vid') {
+                        el = document.createElement('video');
+                        el.src = item.data;
+                        el.controls = true;
+                        el.style.width = '100%';
+                        el.style.height = '110px';
+                        el.style.objectFit = 'cover';
+                        el.className = frameStyle;
+                    } else {
+                        el = document.createElement('img');
+                        el.src = item.data;
+                        el.className = frameStyle;
+                    }
+                    grid.appendChild(el);
                 });
                 container.appendChild(grid);
             } else {
@@ -295,26 +363,33 @@
                 if (mode === 'slideshow-zoom') animClass = 'anim-zoom';
                 if (mode === 'slideshow-bounce') animClass = 'anim-bounce';
 
-                images.forEach((src, index) => {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.style.position = 'absolute';
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'cover';
-                    img.className = `slide-img ${frameStyle} ${animClass}` + (index === 0 ? ' active' : '');
-                    container.appendChild(img);
+                mediaList.forEach((item, index) => {
+                    let el;
+                    if (item.type === 'vid') {
+                        el = document.createElement('video');
+                        el.src = item.data;
+                        el.controls = true;
+                    } else {
+                        el = document.createElement('img');
+                        el.src = item.data;
+                    }
+                    el.style.position = 'absolute';
+                    el.style.width = '100%';
+                    el.style.height = '100%';
+                    el.style.objectFit = 'cover';
+                    el.className = `slide-media ${frameStyle} ${animClass}` + (index === 0 ? ' active' : '');
+                    container.appendChild(el);
                 });
 
-                if (images.length > 1) {
+                if (mediaList.length > 1) {
                     let currentIndex = 0;
                     displayInterval = setInterval(() => {
-                        const slides = container.getElementsByClassName('slide-img');
+                        const slides = container.getElementsByClassName('slide-media');
                         if (slides.length === 0) return;
                         slides[currentIndex].classList.remove('active');
                         currentIndex = (currentIndex + 1) % slides.length;
                         slides[currentIndex].classList.add('active');
-                    }, 2500);
+                    }, 3500);
                 }
             }
         }
@@ -327,54 +402,46 @@
             const frameStyle = document.getElementById('photoFrameStyle').value;
             const displayMode = document.getElementById('displayMode').value;
 
-            const payload = {
-                m: message,
-                n: name,
-                img: uploadedImages,
-                mem: memory,
-                aud: recordedAudioBase64,
-                p: password,
-                f: frameStyle,
-                dm: displayMode
-            };
+            document.getElementById('generatedShareLink').innerText = "Saving to database & generating short link...";
 
-            const jsonString = JSON.stringify(payload);
-            const encoded = btoa(encodeURIComponent(jsonString));
-            const baseUrl = window.location.href.split('?')[0];
-            const longLink = `${baseUrl}?data=${encoded}`;
-
-            document.getElementById('generatedShareLink').innerText = "Generating link...";
-            
-            // Try shortening via Is.gd (fast & reliable API), fallback to long link if blocked
             try {
-                const response = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(longLink)}`);
-                if (response.ok) {
-                    const shortUrl = await response.text();
-                    finalShortShareUrl = shortUrl.trim();
-                } else {
-                    finalShortShareUrl = longLink;
+                const docRef = await window.addDoc(window.collection(window.db, "wishes"), {
+                    m: message,
+                    n: name,
+                    media: uploadedMedia,
+                    mem: memory,
+                    aud: recordedAudioBase64,
+                    p: password,
+                    f: frameStyle,
+                    dm: displayMode,
+                    time: new Date().toISOString()
+                });
+
+                const baseUrl = window.location.href.split('#')[0].split('?')[0];
+                finalShortShareUrl = `${baseUrl}#${docRef.id}`;
+
+                document.getElementById('generatedShareLink').innerText = finalShortShareUrl;
+                window.shareableMsgText = `🔐 Ek Secret Protected Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalShortShareUrl}`;
+
+                document.getElementById('creatorCardText').innerText = `${message}`;
+                renderMediaBox('creatorMediaBox', uploadedMedia, displayMode, frameStyle);
+
+                if (memory) {
+                    document.getElementById('creatorCardMemory').innerHTML = `📖 <b>Memory:</b><br>${memory}`;
+                    document.getElementById('creatorCardMemory').style.display = 'block';
                 }
-            } catch (err) {
-                finalShortShareUrl = longLink;
+                if (recordedAudioBase64) {
+                    document.getElementById('creatorCardAudio').src = recordedAudioBase64;
+                    document.getElementById('creatorCardAudioContainer').style.display = 'block';
+                }
+
+                document.getElementById('creatorWishCard').style.display = 'block';
+                document.getElementById('creatorWishCard').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (e) {
+                alert("⚠️ Error saving wish to database. Please check your internet connection.");
+                document.getElementById('generatedShareLink').innerText = "Failed to generate link.";
             }
-
-            document.getElementById('generatedShareLink').innerText = finalShortShareUrl;
-            window.shareableMsgText = `🔐 Ek Secret Protected Wish aayi hai aapke liye! Password (${password}) daal kar dekhein:\n${finalShortShareUrl}`;
-
-            document.getElementById('creatorCardText').innerText = `${message}`;
-            renderMediaBox('creatorMediaBox', uploadedImages, displayMode, frameStyle);
-
-            if (memory) {
-                document.getElementById('creatorCardMemory').innerHTML = `📖 <b>Memory:</b><br>${memory}`;
-                document.getElementById('creatorCardMemory').style.display = 'block';
-            }
-            if (recordedAudioBase64) {
-                document.getElementById('creatorCardAudio').src = recordedAudioBase64;
-                document.getElementById('creatorCardAudioContainer').style.display = 'block';
-            }
-
-            document.getElementById('creatorWishCard').style.display = 'block';
-            document.getElementById('creatorWishCard').scrollIntoView({ behavior: 'smooth' });
         }
 
         function shareAnywhere() {
@@ -393,45 +460,38 @@
         function unlockViewerWish() {
             const enteredPass = document.getElementById('viewerPassInput').value.trim();
             const enteredName = document.getElementById('viewerNameInput').value.trim();
-            const urlParams = new URLSearchParams(window.location.search);
-            const encodedData = urlParams.get('data');
 
-            try {
-                const jsonString = decodeURIComponent(atob(encodedData));
-                const data = JSON.parse(jsonString);
-
-                if (enteredPass === data.p) {
+            if (fetchedWishData) {
+                if (enteredPass === fetchedWishData.p) {
                     document.getElementById('viewerPassScreen').style.display = 'none';
                     document.getElementById('viewerShowScreen').style.display = 'block';
 
-                    const displayName = enteredName ? enteredName : data.n;
+                    const displayName = enteredName ? enteredName : fetchedWishData.n;
                     document.getElementById('viewerHeading').innerText = `✨ Special Wish For ${displayName} ✨`;
-                    document.getElementById('viewerCardText').innerText = `${data.m}`;
+                    document.getElementById('viewerCardText').innerText = `${fetchedWishData.m}`;
                     
-                    const frameStyle = data.f || 'frame-classic';
-                    const displayMode = data.dm || 'slideshow-fade';
-                    renderMediaBox('viewerMediaBox', data.img, displayMode, frameStyle);
+                    const frameStyle = fetchedWishData.f || 'frame-classic';
+                    const displayMode = fetchedWishData.dm || 'slideshow-fade';
+                    renderMediaBox('viewerMediaBox', fetchedWishData.media, displayMode, frameStyle);
 
-                    if (data.mem) {
-                        document.getElementById('viewerCardMemory').innerHTML = `📖 <b>Memory & Story:</b><br>${data.mem}`;
+                    if (fetchedWishData.mem) {
+                        document.getElementById('viewerCardMemory').innerHTML = `📖 <b>Memory & Story:</b><br>${fetchedWishData.mem}`;
                         document.getElementById('viewerCardMemory').style.display = 'block';
                     }
 
-                    if (data.aud) {
-                        document.getElementById('viewerCardAudio').src = data.aud;
+                    if (fetchedWishData.aud) {
+                        document.getElementById('viewerCardAudio').src = fetchedWishData.aud;
                         document.getElementById('viewerCardAudioContainer').style.display = 'block';
                     }
                 } else {
                     document.getElementById('viewerErrorMsg').innerText = "❌ Galat password! Sahi password dalein.";
                 }
-            } catch (e) {
-                document.getElementById('viewerErrorMsg').innerText = "❌ Invalid link data.";
             }
         }
 
         function resetToCreatorMode() {
             if (displayInterval) clearInterval(displayInterval);
-            window.location.href = window.location.href.split('?')[0];
+            window.location.href = window.location.href.split('#')[0].split('?')[0];
         }
     </script>
 </body>
